@@ -1,6 +1,6 @@
 #!/bin/sh
 # Description: search user files
-# date: 2019-02-23
+# date: 2019-01-14
 
 if [ ! -f "/src/chkau/export_env" ] ; then
   echo ''
@@ -26,9 +26,6 @@ if [ $(uname) == "Linux" ] ; then
 else
   OS="AIX"
 fi
-
-aPath='/source/backupUserFiles'
-[ -d ${aPath} ] || mkdir -p ${aPath}
 
 
 search_user_files() {
@@ -74,16 +71,12 @@ echo '帳號: '${user_name}'    UID : '${u_uid} >> ${user_files_log}
 echo '' >> ${user_files_log}
 echo '所屬檔案清單 : '${files} >> ${user_files_log}
 echo '清單內容 :' >> ${user_files_log}
-
-# file name or directory name has a blank character
-IFS=$'\n'
-
 if [ -s ${files} ] ; then
+  #cat ${files} >> ${user_files_log}
   for i in $(cat ${files}) ; do
     check_ftime ${i}
-    ls_file=$(ls -ld ${i} | awk '{print $1" "$3" "$4}')
-    #echo ${ftime}" "${ls_file}" "$(dirname ${i})"/"$(basename ${i}) >> ${user_files_log}
-    echo "${ftime} ${ls_file} $(dirname ${i})/$(basename ${i})" >> ${user_files_log}
+    ls_file=$(ls -ld ${i} | awk '{print $1" "$3" "$4" "$9}')
+    echo ${ftime}" "${ls_file} >> ${user_files_log}
   done
   echo '' >> ${user_files_log}
   cat ${user_files_log} | tee -a ${log}
@@ -109,8 +102,10 @@ case ${del_a} in
       case ${del_b} in
         yes)
           mdir='/tmp/'${user_name}${i%/*}
+          #echo ${mdir}
           [ -d ${mdir} ] || mkdir -p ${mdir}
           mv ${i} ${mdir}
+          #rm -f ${i}
           echo "已刪除."
           echo ''
           echo "已刪除 "${i} >> ${log}
@@ -122,6 +117,8 @@ case ${del_a} in
     done
     echo '' >> ${log}
     date_time=$(date +%Y%m%d_%H%M%S)
+    aPath='/source/backupUserFiles'
+    [ -d ${aPath} ] || mkdir -p ${aPath}
     aFileName=${aPath}/${date_time}_${user_name}.tar.gz
     cd /tmp
     tar czf ${aFileName} ${user_name} 2>/dev/null
@@ -134,6 +131,7 @@ case ${del_a} in
     ;;
 esac
 
+#echo ''
 echo $(date +%Y-%m-%d" "%H:%M:%S) >> ${log}
 echo '' >> ${log}
 rm -f ${tmp1} ${user_files_log}
@@ -204,28 +202,15 @@ main() {
       ;;
     [Qq])
       # 刪除7天以上 user 遭刪除檔案的備份檔
-      find ${aPath} -mtime +7 -type f -exec rm -f {} \;
+      find /source/backupUserFiles -mtime +7 -type f -exec rm -f {} \;
 
       # 刪除60天以上的舊報告
-      find ${reportDir} -mtime +60 -type f -exec rm -f {} \;
-
-      # 報告檔大於 1024000 ，自動刪除 1000 行以前的資料
-      if [ $(ls -l ${log} | awk '{print $5}') -gt 1024000 ] ; then
-        tmp_log=${0%/*}/${RANDOM}_temp
-        tail -1000 ${log} > ${tmp_log}
-        cat ${tmp_log} > ${log}
-        rm -f ${tmp_log}
-        echo '' >> ${log}
-        echo '--------------------------------------------------------------------' >> ${log}
-        echo "$(date +%Y-%m-%d" "%H:%M:%S) 報告檔大於 1024000，自動刪除 1000 行以前的資料" >> ${log}
-        echo '--------------------------------------------------------------------' >> ${log}
-        echo '' >> ${log}
-      fi 
+      find /src/chkau/report -mtime +60 -type f -exec rm -f {} \;
 
       echo ''
       echo 'Thanks !! bye bye ^-^ !!!'
       echo ''
-      exit 0
+      exit
       ;;
     *)
       echo ''
@@ -236,4 +221,5 @@ main() {
 
 
 main
+
 
