@@ -1,0 +1,36 @@
+3001-422  The user "" has multiple entries in /etc/passwd.
+3001-403  Bad line found in /etc/passwd:
+""
+3001-414  The stanza for "" was not found in /etc/security/passwd.
+3001-421  The user "" does not have a stanza in /etc/security/user.
+3001-402  The user "dbchg" has an invalid password field in /etc/passwd.
+3001-402  The user "dc1" has an invalid password field in /etc/passwd.
+3001-402  The user "esaadmin" has an invalid password field in /etc/passwd.
+3001-402  The user "guardium" has an invalid password field in /etc/passwd.
+3001-402  The user "invscout" has an invalid password field in /etc/passwd.
+3001-402  The user "ipsec" has an invalid password field in /etc/passwd.
+3001-402  The user "lp" has an invalid password field in /etc/passwd.
+3001-402  The user "nuucp" has an invalid password field in /etc/passwd.
+3001-402  The user "osseal" has an invalid password field in /etc/passwd.
+3001-402  The user "snapp" has an invalid password field in /etc/passwd.
+3001-402  The user "spos5" has an invalid password field in /etc/passwd.
+3001-402  The user "srvproxy" has an invalid password field in /etc/passwd.
+3001-402  The user "sshd" has an invalid password field in /etc/passwd.
+3001-402  The user "tivoli" has an invalid password field in /etc/passwd.
+3001-414  The stanza for "dbchg" was not found in /etc/security/passwd.
+3001-414  The stanza for "dc1" was not found in /etc/security/passwd.
+3001-414  The stanza for "esaadmin" was not found in /etc/security/passwd.
+3001-414  The stanza for "guardium" was not found in /etc/security/passwd.
+3001-414  The stanza for "invscout" was not found in /etc/security/passwd.
+3001-414  The stanza for "ipsec" was not found in /etc/security/passwd.
+3001-414  The stanza for "lp" was not found in /etc/security/passwd.
+3001-414  The stanza for "nuucp" was not found in /etc/security/passwd.
+3001-414  The stanza for "osseal" was not found in /etc/security/passwd.
+3001-414  The stanza for "snapp" was not found in /etc/security/passwd.
+3001-414  The stanza for "spkadm" was not found in /etc/security/passwd.
+3001-414  The stanza for "spos5" was not found in /etc/security/passwd.
+3001-414  The stanza for "srvproxy" was not found in /etc/security/passwd.
+3001-414  The stanza for "sshd" was not found in /etc/security/passwd.
+3001-414  The stanza for "tivoli" was not found in /etc/security/passwd.
+3001-421  The user "lp" does not have a stanza in /etc/security/user.
+3001-421  The user "spkadm" does not have a stanza in /etc/security/user.

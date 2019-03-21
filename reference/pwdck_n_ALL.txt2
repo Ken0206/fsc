@@ -1,0 +1,22 @@
+3001-422  The user "" has multiple entries in /etc/passwd.
+3001-403  Bad line found in /etc/passwd:
+""
+3001-414  The stanza for "" was not found in /etc/security/passwd.
+3001-421  The user "" does not have a stanza in /etc/security/user.
+3001-402  The user "esaadmin" has an invalid password field in /etc/passwd.
+3001-414  The stanza for "esaadmin" was not found in /etc/security/passwd.
+3001-402  The user "invscout" has an invalid password field in /etc/passwd.
+3001-414  The stanza for "invscout" was not found in /etc/security/passwd.
+3001-402  The user "ipsec" has an invalid password field in /etc/passwd.
+3001-414  The stanza for "ipsec" was not found in /etc/security/passwd.
+3001-402  The user "lp" has an invalid password field in /etc/passwd.
+3001-414  The stanza for "lp" was not found in /etc/security/passwd.
+3001-421  The user "lp" does not have a stanza in /etc/security/user.
+3001-402  The user "snapp" has an invalid password field in /etc/passwd.
+3001-414  The stanza for "snapp" was not found in /etc/security/passwd.
+3001-414  The stanza for "spkadm" was not found in /etc/security/passwd.
+3001-421  The user "spkadm" does not have a stanza in /etc/security/user.
+3001-402  The user "srvproxy" has an invalid password field in /etc/passwd.
+3001-414  The stanza for "srvproxy" was not found in /etc/security/passwd.
+3001-402  The user "sshd" has an invalid password field in /etc/passwd.
+3001-414  The stanza for "sshd" was not found in /etc/security/passwd.
