@@ -67,7 +67,7 @@ list_dirs_permissions_by_user() {
     ids=$(cat /etc/passwd | awk -F':' '/.*sh$/  {print $1}')
   fi
 
-  echo "Please wait..."
+  #echo "Please wait..."
   echo HOSTNAME: $(hostname) "    " TIME: $(date +%Y/%m/%d) $(date +%H:%M:%S) >>$ACCESS_REPORT
   echo "" >>$ACCESS_REPORT
 
@@ -203,5 +203,6 @@ main() {
   done
 }
 
-main
+#main
+list_dirs_permissions_by_user
 
