@@ -1,6 +1,6 @@
 #!/bin/sh
 # Description: nouser files
-# date: 2019-02-20
+# date: 2019-01-14
 
 if [ ! -f "/src/chkau/export_env" ] ; then
   echo ''
@@ -22,7 +22,6 @@ fi
 log=${reportDir}/$(hostname)_nouser_Report.txt
 [ -d ${baseLineDir} ] || mkdir -p ${baseLineDir}
 base_line=${baseLineDir}/$(hostname)_nouser.txt
-base_line_d=${baseLineDir}/$(hostname)_nouser.txt.d
 
 if [ $(uname) == "Linux" ] ; then
   OS="Linux"
@@ -30,16 +29,13 @@ else
   OS="AIX"
 fi
 
-# file name or directory name has a blank character
-IFS=$'\n'
-
 
 find_files() {
   timeStamp=$(date +%Y%m%d_%H%M%S)
   rm -f ${log}
-  newFind=${0%/*}/${RANDOM}_newFind.temp
+  newFind=${0%/*}/${RANDOM}.temp
   output_newFind=${reportDir}/$(hostname)_nouser_${timeStamp}.txt
-  base_newFind=${0%/*}/${RANDOM}_base_newFind.temp
+  base_newFind=${0%/*}/${RANDOM}.temp
   #echo '搜尋中 ...'
   #find / -name ".*" 2>/dev/null | sort > ${newFind}
   #find / -nouser -ls 2>/dev/null | sort > ${newFind}
@@ -49,35 +45,38 @@ find_files() {
   echo "   日期      時間      權限     UID   GID     完整路徑" >> ${output_newFind}
   echo "-------------------------------------------------------------------" >> ${output_newFind}
   for i in $(cat ${newFind}) ; do
+    if [ -f ${i} ] || [ -d ${i} ] ; then
       check_ftime ${i}
-      ls_file="$(ls -ld ${i} | awk '{print $1" "$3" "$4}') ${i}"
+      ls_file=$(ls -ld ${i} | awk '{print $1" "$3" "$4" "$9}')
       echo ${ftime}" "${ls_file}  >> ${base_newFind}
+    fi
   done
-  cat ${base_newFind} >> ${output_newFind} 2> /dev/null
+  cat ${base_newFind} >> ${output_newFind}
   echo "-------------------------------------------------------------------" >> ${output_newFind}
   echo "   日期      時間      權限     UID   GID     完整路徑" >> ${output_newFind}
   echo '' >> ${output_newFind}
   echo "  Total  : ${newFindCount}" >> ${output_newFind}
 
-  report=${0%/*}/${RANDOM}_report.temp
-  if [ ! -f ${base_line} ] || [ ! -f ${base_line_d} ] ; then
-    cat ${base_newFind} > ${base_line} 2> /dev/null
-    cat ${newFind} > ${base_line_d} 2> /dev/null
+  report=${0%/*}/${RANDOM}.temp
+  if [ ! -f ${base_line} ] ; then
+    cat ${base_newFind} > ${base_line}
     echo '' >> ${report}
     echo "查無基準檔，建立基準檔" >> ${report}
   else
-    t1=${0%/*}/${RANDOM}_t1.temp
-    t2=${0%/*}/${RANDOM}_t2.temp
-    diff ${base_line_d} ${newFind} | grep "^<" | sed 's/^< //g' >> ${t1}
+    base_line_d=${0%/*}/${RANDOM}.temp
+    awk '{print $6}' ${base_line} | sort > ${base_line_d}
+    t1=${0%/*}/${RANDOM}.temp
+    t2=${0%/*}/${RANDOM}.temp
+    diff ${base_line_d} ${newFind} | grep "^<" | awk '{print $2}' >> ${t1}
     delCount=$(cat ${t1} | wc -l)
     if [ -s ${t1} ] 
     then 
       echo '' >> ${report}
-      echo "比基準檔 減少數量 : ${delCount}" >> ${report}
+      echo "檔案減少數量 : ${delCount}" >> ${report}
       echo "減少清單 :" >> ${report}
       cat ${t1} >> ${report}
     fi
-    diff ${base_line_d} ${newFind} | grep "^>" | sed 's/^> //g' >> ${t2}
+    diff ${base_line_d} ${newFind} | grep "^>" | awk '{print $2}' >> ${t2}
     addCount=$(cat ${t2} | wc -l)
     if [ -s ${t2} ]
     then
@@ -88,7 +87,7 @@ find_files() {
       echo "-------------------------------------------------------------------" >> ${report}
       for i in $(cat ${t2}) ; do
         check_ftime ${i}
-        ls_file="$(ls -ld ${i} | awk '{print $1" "$3" "$4}') ${i}"
+        ls_file=$(ls -ld ${i} | awk '{print $1" "$3" "$4" "$9}')
         echo ${ftime}" "${ls_file}  >> ${report}
       done
       echo "-------------------------------------------------------------------" >> ${report}
@@ -102,6 +101,7 @@ find_files() {
       echo '' >> ${report}
       echo "與基準檔比對相同，沒有新增減少" >> ${report}
     fi
+  #cat ${base_line_d} > ${base_line}
   fi
 
   check_ftime ${base_line}
@@ -121,7 +121,7 @@ find_files() {
   echo '' >> ${report}
 
   cat ${report} >> ${log}
-  rm -f ${t1} ${t2} ${newFind} ${report} ${base_newFind}
+  rm -f ${t1} ${t2} ${newFind} ${report} ${base_line_d} ${base_newFind}
   cat ${log}
 }
 
@@ -225,6 +225,7 @@ main() {
       echo ''
       echo 'Thanks !! bye bye ^-^ !!!'
       echo ''
+      exit
       ;;
     *)
       echo ''
@@ -235,9 +236,6 @@ main() {
 
 
 find_files
-
 # 刪除60天以上的舊報告
-find ${reportDir} -mtime +60 -type f -exec rm -f {} \;
-
+find /src/chkau/report -mtime +60 -type f -exec rm -f {} \;
 exit 0
-
