@@ -17,10 +17,10 @@
 
 
 ### script 共同特性︰
--1. 必須以 root 權限執行
--2. script 必須位於 /src/chkau/ 執行
--3. Linux 和 AIX 皆可執行
--4. 每次執行都會刪除 /src/chkau/report/ 下 60 天前的檔案
+- 1. 必須以 root 權限執行
+- 2. script 必須位於 /src/chkau/ 執行
+- 3. Linux 和 AIX 皆可執行
+- 4. 每次執行都會刪除 /src/chkau/report/ 下 60 天前的檔案
 
 
 ### 1. hidden_files.sh 隱藏檔檢查
