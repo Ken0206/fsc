@@ -9,12 +9,13 @@
 07. export_env                         共同設定
 08. check_permission_and_md5.sh        帳號對程式及資料檔案相關權限之檢查 (有互動選單)
 09. check_permission_and_md5_direct.sh 同上，沒有互動選單，直接輸出報告
-10. 5 個 check 檔
-    iso_chk_aix__v3.0.sh
-    iso_chk_linux_rhel6_3.0.sh
-    iso_chk_linux_rhel7_3.0.sh
-    iso_chk_linux_suse11_3.0.sh
-    iso_chk_linux_suse12_3.0.sh
+
+5 個 check 檔
+10. iso_chk_aix__v3.0.sh
+11. iso_chk_linux_rhel6_3.0.sh
+12. iso_chk_linux_rhel7_3.0.sh
+13. iso_chk_linux_suse11_3.0.sh
+14. iso_chk_linux_suse12_3.0.sh
 ```
 ---
 ### script 共同特性︰
