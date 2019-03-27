@@ -1,5 +1,5 @@
 #!/bin/sh
-# date : 2019-03-26
+# date : 2019-03-27
 # line  #22  #55  #70
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
@@ -100,7 +100,7 @@ list_dirs_permissions_by_user() {
 
         wc_=${#_dir}
         line_n=1
-        for (( x=0 ; x<=${wc_} ; x=x+${step_n} )); do
+        for x in $(seq 0 ${step_n} ${wc_}) ; do
           if [ "${line_n}" -eq 1 ] ; then
             printf "%-10s %-7s %-5s %-10s %-29s %-s \n" $id "$_readable" "$_writable" "$_execable" "${_dir:${x}:${step_n}}" "${check_box}" >>$ACCESS_REPORT
             line_n=2
@@ -113,7 +113,7 @@ list_dirs_permissions_by_user() {
 
         wc_=${#_dir}
         line_n=1
-        for (( x=0 ; x<=${wc_} ; x=x+${step_n} )); do
+        for x in $(seq 0 ${step_n} ${wc_}) ; do
           if [ "${line_n}" -eq 1 ] ; then
             printf "%-10s %-27s %-29s \n" $id "無 read write exec 權限" "${_dir:${x}:${step_n}}" >>$ACCESS_REPORT
             line_n=2
@@ -138,7 +138,7 @@ list_dirs_permissions_by_user() {
           _dir2="$_dir/$sub_dir"
           wc_=${#_dir2}
           line_n=1
-          for (( x=0 ; x<=${wc_} ; x=x+${step_n} )); do
+          for x in $(seq 0 ${step_n} ${wc_}) ; do
             if [ "${line_n}" -eq 1 ] ; then
               printf "%-10s %-7s %-5s %-10s %-29s %-s \n" $id "$_readable" "$_writable" "$_execable" "${_dir2:${x}:${step_n}}" "${check_box}" >>$ACCESS_REPORT
               line_n=2
