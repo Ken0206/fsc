@@ -1,12 +1,12 @@
 #!/bin/sh
-# date : 2019-04-03
+# date : 2019-04-08
 # line  #23  #56  #71
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
 # 使用前請先定義 以下參數
 # DIRECTORY_YOU_WANT_TO_CHECK_PERMISSION  #掃描這些目錄下所有檔案與目錄的權限
 
-DIRECTORY_YOU_WANT_TO_CHECK="/home /tmp"
+DIRECTORY_YOU_WANT_TO_CHECK="/home /source /tmp"
 
 _HOME="/src/chkau/report"
 [ -d ${_HOME} ] || mkdir -p ${_HOME}
@@ -69,6 +69,8 @@ list_dirs_permissions_by_user() {
   fi
 
   echo "Please wait..."
+  echo "                                 使用者對重要系統伺服器重要業務檔案與程式權限清查" >>$ACCESS_REPORT
+  echo '' >>$ACCESS_REPORT
   echo HOSTNAME: $(hostname) "    " TIME: $(date +%Y/%m/%d) $(date +%H:%M:%S) >>$ACCESS_REPORT
   echo "" >>$ACCESS_REPORT
 
@@ -94,7 +96,6 @@ list_dirs_permissions_by_user() {
     echo '' >>$ACCESS_REPORT
     echo "  帳號     讀取    寫入  執行        檔案或程式路徑                  負責科別    持有人簽章   續用/不續用，將開單刪除" >>$ACCESS_REPORT
     for _dir in $DIRECTORY_YOU_WANT_TO_CHECK; do
-      echo "======================================================================================================================" >>$ACCESS_REPORT
       _readable=""
       _writable=""
       _execable=""
@@ -103,6 +104,8 @@ list_dirs_permissions_by_user() {
       su $id -c "test -x '$_dir'" >/dev/null 2>&1 && _execable="exec"
 
       if ! [[ $_readable = "" && $_writable = "" && $_execable = "" ]]; then
+
+        echo "======================================================================================================================" >>$ACCESS_REPORT
 
         x=0
         wc_=${#_dir}
@@ -117,26 +120,27 @@ list_dirs_permissions_by_user() {
           else
             printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
           fi
+          echo '' >>$ACCESS_REPORT
           x=${x}+${step_n}
         done
 
       else
 
         x=0
-        wc_=${#_dir}
-        while [ "${wc_}" -gt "${x}" ] ; do
-          if [[ "$OS" = "Linux" ]]; then
-            sub_chr=${_dir:${x}:${step_n}}
-          else
-            sub_chr=$(echo ${_dir} | cut -c${x}-${step_n})
-          fi
-          if [ "${x}" -eq 0 ] ; then
-            printf "%-10s %-27s %-29s \n" $id "無 read write exec 權限" "${sub_chr}" >>$ACCESS_REPORT
-          else
-            printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
-          fi
-          x=${x}+${step_n}
-        done
+        #wc_=${#_dir}
+        #while [ "${wc_}" -gt "${x}" ] ; do
+        #  if [[ "$OS" = "Linux" ]]; then
+        #    sub_chr=${_dir:${x}:${step_n}}
+        #  else
+        #    sub_chr=$(echo ${_dir} | cut -c${x}-${step_n})
+        #  fi
+        #  if [ "${x}" -eq 0 ] ; then
+        #    printf "%-10s %-27s %-29s \n" $id "無 read write exec 權限" "${sub_chr}" >>$ACCESS_REPORT
+        #  else
+        #    printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
+        #  fi
+        #  x=${x}+${step_n}
+        #done
 
       fi
 
