@@ -140,35 +140,35 @@ list_dirs_permissions_by_user() {
 
       fi
 
-      sub_dirs=$(ls -la $_dir | grep "^d" | awk '{print $NF}' | grep -v "^\.")
-      for sub_dir in $sub_dirs; do
-        _readable=""
-        _writable=""
-        _execable=""
-        su $id -c "test -r '$_dir/$sub_dir'" >/dev/null 2>&1 && _readable="read"
-        su $id -c "test -w '$_dir/$sub_dir'" >/dev/null 2>&1 && _writable="write"
-        su $id -c "test -x '$_dir/$sub_dir'" >/dev/null 2>&1 && _execable="exec"
-        if ! [[ $_readable = "" && $_writable = "" && $_execable = "" ]]; then
+      #sub_dirs=$(ls -la $_dir | grep "^d" | awk '{print $NF}' | grep -v "^\.")
+      #for sub_dir in $sub_dirs; do
+      #  _readable=""
+      #  _writable=""
+      #  _execable=""
+      #  su $id -c "test -r '$_dir/$sub_dir'" >/dev/null 2>&1 && _readable="read"
+      #  su $id -c "test -w '$_dir/$sub_dir'" >/dev/null 2>&1 && _writable="write"
+      #  su $id -c "test -x '$_dir/$sub_dir'" >/dev/null 2>&1 && _execable="exec"
+      #  if ! [[ $_readable = "" && $_writable = "" && $_execable = "" ]]; then
 
-          x=0
-          _dir2="$_dir/$sub_dir"
-          wc_=${#_dir2}
-          while [ "${wc_}" -gt "${x}" ] ; do
-            if [[ "$OS" = "Linux" ]]; then
-              sub_chr=${_dir2:${x}:${step_n}}
-            else
-              sub_chr=$(echo ${_dir2} | cut -c${x}-${step_n})
-            fi
-            if [ "${x}" -eq 0 ] ; then
-              printf "%-10s %-7s %-5s %-10s %-29s %-s \n" $id "$_readable" "$_writable" "$_execable" "${sub_chr}" "${check_box}" >>$ACCESS_REPORT
-            else
-              printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
-            fi
-            x=${x}+${step_n}
-          done
+      #    x=0
+      #    _dir2="$_dir/$sub_dir"
+      #    wc_=${#_dir2}
+      #    while [ "${wc_}" -gt "${x}" ] ; do
+      #      if [[ "$OS" = "Linux" ]]; then
+      #        sub_chr=${_dir2:${x}:${step_n}}
+      #      else
+      #        sub_chr=$(echo ${_dir2} | cut -c${x}-${step_n})
+      #      fi
+      #      if [ "${x}" -eq 0 ] ; then
+      #        printf "%-10s %-7s %-5s %-10s %-29s %-s \n" $id "$_readable" "$_writable" "$_execable" "${sub_chr}" "${check_box}" >>$ACCESS_REPORT
+      #      else
+      #        printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
+      #      fi
+      #      x=${x}+${step_n}
+      #    done
 
-        fi
-      done
+      #  fi
+      #done
     done
   done
 }

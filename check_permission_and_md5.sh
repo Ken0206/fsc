@@ -1,6 +1,6 @@
 #!/bin/sh
-# date : 2019-03-27
-# line  #22  #55  #70
+# date : 2019-04-03
+# line  #23  #56  #71
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
 # 使用前請先定義 以下參數
@@ -10,6 +10,7 @@ DIRECTORY_YOU_WANT_TO_CHECK="/home /tmp"
 
 _HOME="/src/chkau/report"
 [ -d ${_HOME} ] || mkdir -p ${_HOME}
+typeset -i x=0
 ACCESS_REPORT="$_HOME/ACCESS_report_$(hostname)_$(date +%Y%m%d).txt"
 cat /dev/null > $ACCESS_REPORT
 
@@ -71,14 +72,18 @@ list_dirs_permissions_by_user() {
   echo HOSTNAME: $(hostname) "    " TIME: $(date +%Y/%m/%d) $(date +%H:%M:%S) >>$ACCESS_REPORT
   echo "" >>$ACCESS_REPORT
 
+  check_1=0
   for i in ${DIRECTORY_YOU_WANT_TO_CHECK} ; do
     if [ -d "${i}" ] ; then
       check_t="${check_t} ${i}"
     else
-      echo "${i} 不存在！  請確認 DIRECTORY_YOU_WANT_TO_CHECK 設定值" >>$ACCESS_REPORT
+      if [ "${check_1}" -eq 0 ] ; then
+        #echo "${i} 不存在！  請確認 DIRECTORY_YOU_WANT_TO_CHECK 設定值" >>$ACCESS_REPORT
+        echo "本伺服器無重要業務檔案路徑" >>$ACCESS_REPORT
+        check_1=1
+      fi
     fi
   done
-  echo '' >>$ACCESS_REPORT
 
   DIRECTORY_YOU_WANT_TO_CHECK="${check_t}"
 
@@ -86,6 +91,7 @@ list_dirs_permissions_by_user() {
   step_n=29
 
   for id in $ids; do
+    echo '' >>$ACCESS_REPORT
     echo "  帳號     讀取    寫入  執行        檔案或程式路徑                  負責科別    持有人簽章   續用/不續用，將開單刪除" >>$ACCESS_REPORT
     for _dir in $DIRECTORY_YOU_WANT_TO_CHECK; do
       echo "======================================================================================================================" >>$ACCESS_REPORT
@@ -98,57 +104,71 @@ list_dirs_permissions_by_user() {
 
       if ! [[ $_readable = "" && $_writable = "" && $_execable = "" ]]; then
 
+        x=0
         wc_=${#_dir}
-        line_n=1
-        for x in $(seq 0 ${step_n} ${wc_}) ; do
-          if [ "${line_n}" -eq 1 ] ; then
-            printf "%-10s %-7s %-5s %-10s %-29s %-s \n" $id "$_readable" "$_writable" "$_execable" "${_dir:${x}:${step_n}}" "${check_box}" >>$ACCESS_REPORT
-            line_n=2
+        while [ "${wc_}" -gt "${x}" ] ; do
+          if [[ "$OS" = "Linux" ]]; then
+            sub_chr=${_dir:${x}:${step_n}}
           else
-            printf "%-35s %-s \n" " " "${_dir:${x}:${step_n}}" >>$ACCESS_REPORT
+            sub_chr=$(echo ${_dir} | cut -c${x}-${step_n})
           fi
+          if [ "${x}" -eq 0 ] ; then
+            printf "%-10s %-7s %-5s %-10s %-29s %-s \n" $id "$_readable" "$_writable" "$_execable" "${sub_chr}" "${check_box}" >>$ACCESS_REPORT
+          else
+            printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
+          fi
+          x=${x}+${step_n}
         done
 
       else
 
+        x=0
         wc_=${#_dir}
-        line_n=1
-        for x in $(seq 0 ${step_n} ${wc_}) ; do
-          if [ "${line_n}" -eq 1 ] ; then
-            printf "%-10s %-27s %-29s \n" $id "無 read write exec 權限" "${_dir:${x}:${step_n}}" >>$ACCESS_REPORT
-            line_n=2
+        while [ "${wc_}" -gt "${x}" ] ; do
+          if [[ "$OS" = "Linux" ]]; then
+            sub_chr=${_dir:${x}:${step_n}}
           else
-            printf "%-35s %-s \n" " " "${_dir:${x}:${step_n}}" >>$ACCESS_REPORT
+            sub_chr=$(echo ${_dir} | cut -c${x}-${step_n})
           fi
+          if [ "${x}" -eq 0 ] ; then
+            printf "%-10s %-27s %-29s \n" $id "無 read write exec 權限" "${sub_chr}" >>$ACCESS_REPORT
+          else
+            printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
+          fi
+          x=${x}+${step_n}
         done
-
 
       fi
 
-      sub_dirs=$(ls -la $_dir | grep "^d" | awk '{print $NF}' | grep -v "^\.")
-      for sub_dir in $sub_dirs; do
-        _readable=""
-        _writable=""
-        _execable=""
-        su $id -c "test -r '$_dir/$sub_dir'" >/dev/null 2>&1 && _readable="read"
-        su $id -c "test -w '$_dir/$sub_dir'" >/dev/null 2>&1 && _writable="write"
-        su $id -c "test -x '$_dir/$sub_dir'" >/dev/null 2>&1 && _execable="exec"
-        if ! [[ $_readable = "" && $_writable = "" && $_execable = "" ]]; then
+      #sub_dirs=$(ls -la $_dir | grep "^d" | awk '{print $NF}' | grep -v "^\.")
+      #for sub_dir in $sub_dirs; do
+      #  _readable=""
+      #  _writable=""
+      #  _execable=""
+      #  su $id -c "test -r '$_dir/$sub_dir'" >/dev/null 2>&1 && _readable="read"
+      #  su $id -c "test -w '$_dir/$sub_dir'" >/dev/null 2>&1 && _writable="write"
+      #  su $id -c "test -x '$_dir/$sub_dir'" >/dev/null 2>&1 && _execable="exec"
+      #  if ! [[ $_readable = "" && $_writable = "" && $_execable = "" ]]; then
 
-          _dir2="$_dir/$sub_dir"
-          wc_=${#_dir2}
-          line_n=1
-          for x in $(seq 0 ${step_n} ${wc_}) ; do
-            if [ "${line_n}" -eq 1 ] ; then
-              printf "%-10s %-7s %-5s %-10s %-29s %-s \n" $id "$_readable" "$_writable" "$_execable" "${_dir2:${x}:${step_n}}" "${check_box}" >>$ACCESS_REPORT
-              line_n=2
-            else
-              printf "%-35s %-s \n" " " "${_dir2:${x}:${step_n}}" >>$ACCESS_REPORT
-            fi
-          done
+      #    x=0
+      #    _dir2="$_dir/$sub_dir"
+      #    wc_=${#_dir2}
+      #    while [ "${wc_}" -gt "${x}" ] ; do
+      #      if [[ "$OS" = "Linux" ]]; then
+      #        sub_chr=${_dir2:${x}:${step_n}}
+      #      else
+      #        sub_chr=$(echo ${_dir2} | cut -c${x}-${step_n})
+      #      fi
+      #      if [ "${x}" -eq 0 ] ; then
+      #        printf "%-10s %-7s %-5s %-10s %-29s %-s \n" $id "$_readable" "$_writable" "$_execable" "${sub_chr}" "${check_box}" >>$ACCESS_REPORT
+      #      else
+      #        printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
+      #      fi
+      #      x=${x}+${step_n}
+      #    done
 
-        fi
-      done
+      #  fi
+      #done
     done
   done
 }
@@ -204,4 +224,5 @@ main() {
 }
 
 main
+#list_dirs_permissions_by_user
 
