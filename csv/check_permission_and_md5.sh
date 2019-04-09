@@ -1,5 +1,5 @@
 #!/bin/sh
-# date : 2019-04-08
+# date : 2019-04-09
 # line  #23  #56  #71
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
@@ -89,9 +89,8 @@ list_dirs_permissions_by_user() {
   check_box="口續用口不續用，將開單刪除"
   echo "帳號,讀取/寫入/執行,檔案或程式路徑,負責科別,持有人簽章,續用/不續用，將開單刪除," >>$ACCESS_REPORT
 
-  for id in $ids; do
-    #echo ',' >>$ACCESS_REPORT
-    for _dir in $DIRECTORY_YOU_WANT_TO_CHECK; do
+  for id in $ids ; do
+    for _dir in $DIRECTORY_YOU_WANT_TO_CHECK ; do
       _readable=""
       _writable=""
       _execable=""
@@ -99,9 +98,24 @@ list_dirs_permissions_by_user() {
       su $id -c "test -w '$_dir'" >/dev/null 2>&1 && _writable="write"
       su $id -c "test -x '$_dir'" >/dev/null 2>&1 && _execable="exec"
 
-      if ! [[ $_readable = "" && $_writable = "" && $_execable = "" ]]; then
-        echo "$id,$_readable/$_writable/$_execable,${_dir},,,${check_box}," >>$ACCESS_REPORT
+      if ! [[ $_readable = "" ]]; then
+        rwx=$_readable
       fi
+      if ! [[ $_writable = "" ]]; then
+        if [ "$rwx" == "" ] ; then
+          rwx=$_writable
+        else
+          rwx="$rwx/$_writable"
+        fi
+      fi
+      if ! [[ $_execable = "" ]]; then
+        if [ "$rwx" == "" ] ; then
+          rwx=$_execable
+        else
+          rwx="$rwx/$_execable"
+        fi
+      fi
+      echo "$id,$rwx,${_dir},,,${check_box}," >>$ACCESS_REPORT
 
     done
   done
