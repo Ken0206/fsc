@@ -29,13 +29,13 @@ cat /etc/login.defs|grep PASS_MAX_DAYS |grep -v "^#" >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
 # echo "pam-config -q --cracklib" >> $outfil 
 # pam-config -q --cracklib >> $outfil
-echo "cat /etc/pam.d/common-auth | grep -E 'minlen|remember'" >> $outfil
-cat /etc/pam.d/common-auth | grep -E 'minlen|remember' >> $outfil
+echo "cat /etc/pam.d/system-auth | grep -E 'minlen|remember'" >> $outfil
+cat /etc/pam.d/system-auth | grep -E 'minlen|remember' >> $outfil
 echo "----------------------------------" >> $outfil
 # echo "pam-config -q --pwhistory ">> $outfil
 # pam-config -q --pwhistory >> $outfil
-echo "cat /etc/pam.d/common-password | grep -E 'minlen|remember'" >> $outfil
-cat /etc/pam.d/common-password | grep -E 'minlen|remember' >> $outfil
+echo "cat /etc/pam.d/password-auth | grep -E 'minlen|remember'" >> $outfil
+cat /etc/pam.d/password-auth | grep -E 'minlen|remember' >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 echo "  " >> $outfil
@@ -136,6 +136,7 @@ echo "  " >> $outfil
 echo "  " >> $outfil
 # cat /etc/profile | grep umask
 
+
 echo "2-8 檢查root登入時是否執行非root的程式?"  >> $outfil
 echo "==================================" >> $outfil
 files_="/root/.bash_profile /root/.bash_login /root/.profile /root/.bashrc"
@@ -213,6 +214,20 @@ echo "2-11 確認隱藏檔是否適當?"  >> $outfil
 echo "==================================" >> $outfil
 echo "檢查應用程式所在路徑下之隱藏檔是否適當 " >> $outfil
     /src/chkau/hidden_files.sh >> $outfil
+echo "----------------------------------" >> $outfil
+echo "  " >> $outfil
+
+echo "2-12 確認使用者代碼之密碼檔"  >> $outfil
+echo "==================================" >> $outfil
+echo "檢查使用者代碼之密碼檔" >> $outfil
+    /src/chkau/passwd_check.sh >> $outfil
+echo "----------------------------------" >> $outfil
+echo "  " >> $outfil
+
+echo "2-13 確認NoUser之檔案"  >> $outfil
+echo "==================================" >> $outfil
+echo "檢查應用程式所在路徑下NoUser之檔案是否適當" >> $outfil
+    /src/chkau/nouser_files.sh >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
@@ -318,7 +333,7 @@ echo "  " >> $outfil
 echo "7-1 確認目前是否已更新至修補程式之最適版本。 " >> $outfil
 echo "==================================" >> $outfil
 echo "維持半年前之最適版本"   >> $outfil
-cat /etc/os-release >> $outfil
+cat /etc/redhat-release >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 echo "  " >> $outfil
@@ -340,10 +355,8 @@ echo "  " >> $outfil
 echo "  " >> $outfil
 
 
-echo "9-2 確認是否裝設燒錄器"  >> $outfil
+echo "9-2 確認光碟機之使用係屬適當？"  >> $outfil
 echo "==================================" >> $outfil
-echo "確認未裝設燒錄器"  >> $outfil
-echo "----------------------------------" >> $outfil
 echo "安裝軟體、開申請單核准後進機房使用"  >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil

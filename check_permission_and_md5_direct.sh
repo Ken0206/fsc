@@ -1,5 +1,5 @@
 #!/bin/sh
-# date : 2019-04-08
+# date : 2019-04-09
 # line  #23  #56  #71
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
@@ -9,7 +9,7 @@
 DIRECTORY_YOU_WANT_TO_CHECK="/home /source /tmp"
 
 _HOME="/src/chkau/report"
-[ -d ${_HOME} ] || mkdir -p ${_HOME}
+[ -d "${_HOME}" ] || mkdir -p ${_HOME}
 typeset -i x=0
 ACCESS_REPORT="$_HOME/ACCESS_report_$(hostname)_$(date +%Y%m%d).txt"
 cat /dev/null > $ACCESS_REPORT
@@ -103,7 +103,7 @@ list_dirs_permissions_by_user() {
       su $id -c "test -w '$_dir'" >/dev/null 2>&1 && _writable="write"
       su $id -c "test -x '$_dir'" >/dev/null 2>&1 && _execable="exec"
 
-      if ! [[ $_readable = "" && $_writable = "" && $_execable = "" ]]; then
+      if ! [[ "$_readable" = "" && "$_writable" = "" && "$_execable" = "" ]]; then
 
         echo "======================================================================================================================" >>$ACCESS_REPORT
 
@@ -152,7 +152,7 @@ list_dirs_permissions_by_user() {
       #  su $id -c "test -r '$_dir/$sub_dir'" >/dev/null 2>&1 && _readable="read"
       #  su $id -c "test -w '$_dir/$sub_dir'" >/dev/null 2>&1 && _writable="write"
       #  su $id -c "test -x '$_dir/$sub_dir'" >/dev/null 2>&1 && _execable="exec"
-      #  if ! [[ $_readable = "" && $_writable = "" && $_execable = "" ]]; then
+      #  if ! [[ "$_readable" = "" && "$_writable" = "" && "$_execable" = "" ]]; then
 
       #    x=0
       #    _dir2="$_dir/$sub_dir"
@@ -178,7 +178,7 @@ list_dirs_permissions_by_user() {
 }
 
 list_last_ACCESS_REPORT() {
-  if [ -f $ACCESS_REPORT ]; then
+  if [ -f "$ACCESS_REPORT" ]; then
     cat $ACCESS_REPORT
     return
   else

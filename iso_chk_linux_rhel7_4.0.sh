@@ -206,6 +206,20 @@ echo "檢查應用程式所在路徑下之隱藏檔是否適當 " >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
+echo "2-12 確認使用者代碼之密碼檔"  >> $outfil
+echo "==================================" >> $outfil
+echo "檢查使用者代碼之密碼檔" >> $outfil
+    /src/chkau/passwd_check.sh >> $outfil
+echo "----------------------------------" >> $outfil
+echo "  " >> $outfil
+
+echo "2-13 確認NoUser之檔案"  >> $outfil
+echo "==================================" >> $outfil
+echo "檢查應用程式所在路徑下NoUser之檔案是否適當" >> $outfil
+    /src/chkau/nouser_files.sh >> $outfil
+echo "----------------------------------" >> $outfil
+echo "  " >> $outfil
+
 echo "3-1 確認關閉telnet服務" >> $outfil
 echo "==================================" >> $outfil
 echo "netstat -an |grepa :23 |grep LISTEN" >> $outfil

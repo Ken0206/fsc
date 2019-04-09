@@ -138,17 +138,23 @@ echo "  " >> $outfil
 
 echo "2-8 檢查root登入時是否執行非root的程式?"  >> $outfil
 echo "==================================" >> $outfil
-echo "ls -l /root/.bash_profile" >> $outfil
-if [ -e /root/.bash_profile ] ; then
-  ls -l /root/.bash_profile >> $outfil
-  cat /root/.bash_profile >> $outfil
-else
-  echo '/root/.bash_profile 無此檔' >> $outfil
-fi
+files_="/root/.bash_profile /root/.bash_login /root/.profile /root/.bashrc"
+echo '----------------------------------------------------------------------' >> $outfil
+for ch_f in ${files_}; do
+  if [ -e "${ch_f}" ] ; then
+    echo "ls -l ${ch_f}" >> $outfil
+    ls -l ${ch_f} >> $outfil
+    echo '' >> $outfil
+    cat ${ch_f} >> $outfil
+    echo '' >> $outfil
+    echo '----------------------------------------------------------------------' >> $outfil
+    check_="H"
+  fi
+done
+[ "${check_}" != "H" ] && echo "root 沒有檔案 : ${files_}" >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 echo "  " >> $outfil
-# ls -l /root/.bash_profile
 
 echo "2-9 確認是否關閉不必需要登入權限的系統預設帳號"  >> $outfil
 echo "==================================" >> $outfil
@@ -205,8 +211,22 @@ echo "  " >> $outfil
 
 echo "2-11 確認隱藏檔是否適當?"  >> $outfil
 echo "==================================" >> $outfil
-echo "檢查應用程式所在路徑下之隱藏檔是否適當 " >> $outfil
+echo "檢查應用程式所在路徑下之隱藏檔是否適當" >> $outfil
     /src/chkau/hidden_files.sh >> $outfil
+echo "----------------------------------" >> $outfil
+echo "  " >> $outfil
+
+echo "2-12 確認使用者代碼之密碼檔"  >> $outfil
+echo "==================================" >> $outfil
+echo "檢查使用者代碼之密碼檔" >> $outfil
+    /src/chkau/passwd_check.sh >> $outfil
+echo "----------------------------------" >> $outfil
+echo "  " >> $outfil
+
+echo "2-13 確認NoUser之檔案"  >> $outfil
+echo "==================================" >> $outfil
+echo "檢查應用程式所在路徑下NoUser之檔案是否適當" >> $outfil
+    /src/chkau/nouser_files.sh >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
@@ -244,11 +264,8 @@ echo "  " >> $outfil
 echo "4-2 確認log file僅有root具有寫入權限。"  >> $outfil
 echo "==================================" >> $outfil
 echo "ls -l /var/log/audit/audit.log "  >> $outfil
-if [ -e /var/log/audit/audit.log ] ; then
-  ls -l /var/log/audit/audit.log >> $outfil
-else 
-  echo '/var/log/audit/audit.log 檔案不存在' >> $outfil
-fi
+ls -l /var/log/audit/audit.log  >> $outfil
+
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 echo "  " >> $outfil
@@ -279,33 +296,20 @@ echo "  " >> $outfil
 echo "6-1 確認作業系統是否已關閉不必要之網路服務(inetd) "  >> $outfil
 echo "==================================" >> $outfil
 
-check_services=(finger.service ftp.service gopher.service imap.service  pop2.service talk.service ntalk.service telnet.service uucp.service nfs.service nis.service )
+check_services=(finger ftp gopher imap pop2 talk ntalk telnet uucp nfs nis)
 
 for service in ${check_services[@]}; do
-    echo "檢查服務 $service 狀態"           >> $outfil
-#    cat /etc/services | grep "^$service "  >> $outfil
-    systemctl list-unit-files | grep "^$service"  | grep enabled
-    service_enabled=$?
-
-#    cat /etc/services | grep "^#$service " >> $outfil
-    systemctl list-unit-files | grep "^$service" | grep disabled
-    service_disabled=$?
-
-    if [ $service_enabled -eq 0 ]; then
-        echo "$service 服務已啟動"          >> $outfil
-    fi
-
-    if [ $service_disabled -eq 0 ]; then
-        echo "$service 服務已關閉"          >> $outfil
-    fi
-
-    if [ $service_disabled -gt 0 ] && [ $service_enabled -gt 0 ]; then
-        echo "本系統無 $service 服務"       >> $outfil
-    fi
-    echo "----------------------------------" >> $outfil
-    echo "  " >> $outfil
-    echo "  " >> $outfil
+  service ${service} status > /dev/null 2>&1
+  test_=$?
+  case ${test_} in
+    0) report_="服務啟動 +" ;;
+    3) report_="服務關閉 -" ;;
+    1) report_="無此服務" ;;
+  esac
+  echo "${service} ${report_}" >> $outfil
+  echo '' >> $outfil
 done
+echo '' >> $outfil
 
 
 echo "6-2 確認只開啟必要之通訊埠及TCP/IP服務"  >> $outfil
@@ -328,7 +332,7 @@ echo "  " >> $outfil
 echo "7-1 確認目前是否已更新至修補程式之最適版本。 " >> $outfil
 echo "==================================" >> $outfil
 echo "維持半年前之最適版本"   >> $outfil
-cat /etc/os-release  >> $outfil
+cat /etc/os-release >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 echo "  " >> $outfil
@@ -350,8 +354,10 @@ echo "  " >> $outfil
 echo "  " >> $outfil
 
 
-echo "9-2 確認光碟機之使用係屬適當？"  >> $outfil
+echo "9-2 確認是否裝設燒錄器"  >> $outfil
 echo "==================================" >> $outfil
+echo "確認未裝設燒錄器"  >> $outfil
+echo "----------------------------------" >> $outfil
 echo "安裝軟體、開申請單核准後進機房使用"  >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
