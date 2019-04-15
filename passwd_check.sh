@@ -1,7 +1,7 @@
 #!/bin/sh
 # Description: passwd check
 # line no. #32, #118, #119
-# date: 2019-04-09
+# date: 2019-04-15
 
 if [ ! -f "/src/chkau/export_env" ] ; then
   echo ''
@@ -44,8 +44,8 @@ passwd_check() {
     t7=${0%/*}/${RANDOM}.temp
     touch ${t1} ${t2} ${t5} ${t6} ${t7} ${report}
 
-    awk -F':' '{print $1}' /etc/passwd | sort > ${t5}
-    awk -F':' '{print $1}' /etc/shadow | sort > ${t6}
+    awk -F':' '{print $1}' /etc/passwd | grep -vE "^sshd$|^haldaemon$|^messagebus$" | sort > ${t5}
+    awk -F':' '{print $1}' /etc/shadow | grep -vE "^sshd$|^haldaemon$|^messagebus$" | sort > ${t6}
     diff ${t5} ${t6} > ${t7}
 
     if [ -s "${t7}" ] ; then
