@@ -1,6 +1,6 @@
 #!/bin/sh
-# date : 2019-04-09
-# line  #23  #56  #71
+# date : 2019-04-30
+# line  #24  #57  #72  #35:${ACCESS_REPORT}  #187~189
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
 # 使用前請先定義 以下參數
@@ -10,9 +10,12 @@ DIRECTORY_YOU_WANT_TO_CHECK="/home /source /tmp"
 
 _HOME="/src/chkau/report"
 [ -d "${_HOME}" ] || mkdir -p ${_HOME}
+dc01_home="/home/dc01"
+[ -d "${dc01_home}" ] || mkdir -p ${dc01_home}
+dc01_REPORT="${dc01_home}/ACCESS_report_$(hostname)_$(date +%Y%m%d).txt"
+ACCESS_REPORT="${_HOME}/ACCESS_report_$(hostname)_$(date +%Y%m%d).txt"
+cat /dev/null > ${ACCESS_REPORT}
 typeset -i x=0
-ACCESS_REPORT="$_HOME/ACCESS_report_$(hostname)_$(date +%Y%m%d).txt"
-cat /dev/null > $ACCESS_REPORT
 
 if [[ "$(uname)" = "Linux" ]]; then
   OS="Linux"
@@ -31,7 +34,7 @@ show_main_menu() {
        Hostname: $(hostname), Today is $(date +%Y-%m-%d)
   +====================================================================+
 
-      1. 執行帳號權限檢查。將結果寫入 ${ACCESS_REPORT}
+      1. 執行帳號權限檢查。將結果寫入 ${dc01_REPORT}
       2. 列出執行結果
 
       q.QUIT
@@ -69,10 +72,10 @@ list_dirs_permissions_by_user() {
   fi
 
   echo "Please wait..."
-  echo "                                 使用者對重要系統伺服器重要業務檔案與程式權限清查" >>$ACCESS_REPORT
-  echo '' >>$ACCESS_REPORT
-  echo HOSTNAME: $(hostname) "    " TIME: $(date +%Y/%m/%d) $(date +%H:%M:%S) >>$ACCESS_REPORT
-  echo "" >>$ACCESS_REPORT
+  echo "                                 使用者對重要系統伺服器重要業務檔案與程式權限清查" >>${ACCESS_REPORT}
+  echo '' >>${ACCESS_REPORT}
+  echo HOSTNAME: $(hostname) "    " TIME: $(date +%Y/%m/%d) $(date +%H:%M:%S) >>${ACCESS_REPORT}
+  echo "" >>${ACCESS_REPORT}
 
   check_1=0
   for i in ${DIRECTORY_YOU_WANT_TO_CHECK} ; do
@@ -80,8 +83,8 @@ list_dirs_permissions_by_user() {
       check_t="${check_t} ${i}"
     else
       if [ "${check_1}" -eq 0 ] ; then
-        #echo "${i} 不存在！  請確認 DIRECTORY_YOU_WANT_TO_CHECK 設定值" >>$ACCESS_REPORT
-        echo "本伺服器無重要業務檔案路徑" >>$ACCESS_REPORT
+        #echo "${i} 不存在！  請確認 DIRECTORY_YOU_WANT_TO_CHECK 設定值" >>${ACCESS_REPORT}
+        echo "本伺服器無重要業務檔案路徑" >>${ACCESS_REPORT}
         check_1=1
       fi
     fi
@@ -89,23 +92,31 @@ list_dirs_permissions_by_user() {
 
   DIRECTORY_YOU_WANT_TO_CHECK="${check_t}"
 
-  check_box="                          口續用口不續用，將開單刪除"
+  check_box="口續用口不續用，將開單刪除"
   step_n=29
 
-  for id in $ids; do
-    echo '' >>$ACCESS_REPORT
-    echo "  帳號     讀取    寫入  執行        檔案或程式路徑                  負責科別    持有人簽章   續用/不續用，將開單刪除" >>$ACCESS_REPORT
-    for _dir in $DIRECTORY_YOU_WANT_TO_CHECK; do
+  for id in ${ids} ; do
+    echo '' >>${ACCESS_REPORT}
+    printf "%-0s %-11s %-9s %-7s %-12s %-39s %-15s %-16s %-s \n" "" "帳號" "讀取" "寫入" "執行" "檔案或程式路徑" "負責科別" "持有人簽章" "續用/不續用，將開單刪除"  >> ${ACCESS_REPORT}
+    for _dir in ${DIRECTORY_YOU_WANT_TO_CHECK} ; do
       _readable=""
       _writable=""
       _execable=""
-      su $id -c "test -r '$_dir'" >/dev/null 2>&1 && _readable="read"
-      su $id -c "test -w '$_dir'" >/dev/null 2>&1 && _writable="write"
-      su $id -c "test -x '$_dir'" >/dev/null 2>&1 && _execable="exec"
+      su ${id} -c "test -r '${_dir}'" >/dev/null 2>&1 && _readable="read"
+      su ${id} -c "test -w '${_dir}'" >/dev/null 2>&1 && _writable="write"
+      su ${id} -c "test -x '${_dir}'" >/dev/null 2>&1 && _execable="exec"
 
-      if ! [[ "$_readable" = "" && "$_writable" = "" && "$_execable" = "" ]]; then
+      if ! [[ "${_readable}" = "" && "${_writable}" = "" && "${_execable}" = "" ]]; then
 
-        echo "======================================================================================================================" >>$ACCESS_REPORT
+        printf '%.s=' {1..118} >> ${ACCESS_REPORT} ; echo '' >> ${ACCESS_REPORT}
+
+        if [ ${id} == "cbrusr" ] || [ ${id:0:2} == "sp" ] ||   [ ${id:0:2} == "op" ] ; then
+          Branch="  系統管理科"
+        elif [ ${id:0:2} == "dc" ] ; then
+          Branch="  資料管制科"
+        else
+          Branch=""
+        fi
 
         x=0
         wc_=${#_dir}
@@ -116,13 +127,13 @@ list_dirs_permissions_by_user() {
             sub_chr=$(echo ${_dir} | cut -c${x}-${step_n})
           fi
           if [ "${x}" -eq 0 ] ; then
-            printf "%-10s %-7s %-5s %-10s %-29s %-s \n" $id "$_readable" "$_writable" "$_execable" "${sub_chr}" "${check_box}" >>$ACCESS_REPORT
+            printf "%-10s %-7s %-5s %-10s %-29s %-30s %-s \n" "${id}" "${_readable}" "${_writable}" "${_execable}" "${sub_chr}" "${Branch}" "${check_box}" >>${ACCESS_REPORT}
           else
-            printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
+            printf "%-35s %-s \n" " " "${sub_chr}" >>${ACCESS_REPORT}
           fi
-          echo '' >>$ACCESS_REPORT
           x=${x}+${step_n}
         done
+        echo '' >>${ACCESS_REPORT}
 
       else
 
@@ -135,27 +146,27 @@ list_dirs_permissions_by_user() {
         #    sub_chr=$(echo ${_dir} | cut -c${x}-${step_n})
         #  fi
         #  if [ "${x}" -eq 0 ] ; then
-        #    printf "%-10s %-27s %-29s \n" $id "無 read write exec 權限" "${sub_chr}" >>$ACCESS_REPORT
+        #    printf "%-10s %-27s %-29s \n" ${id} "無 read write exec 權限" "${sub_chr}" >>${ACCESS_REPORT}
         #  else
-        #    printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
+        #    printf "%-35s %-s \n" " " "${sub_chr}" >>${ACCESS_REPORT}
         #  fi
         #  x=${x}+${step_n}
         #done
 
       fi
 
-      #sub_dirs=$(ls -la $_dir | grep "^d" | awk '{print $NF}' | grep -v "^\.")
+      #sub_dirs=$(ls -la ${_dir} | grep "^d" | awk '{print $NF}' | grep -v "^\.")
       #for sub_dir in $sub_dirs; do
       #  _readable=""
       #  _writable=""
       #  _execable=""
-      #  su $id -c "test -r '$_dir/$sub_dir'" >/dev/null 2>&1 && _readable="read"
-      #  su $id -c "test -w '$_dir/$sub_dir'" >/dev/null 2>&1 && _writable="write"
-      #  su $id -c "test -x '$_dir/$sub_dir'" >/dev/null 2>&1 && _execable="exec"
-      #  if ! [[ "$_readable" = "" && "$_writable" = "" && "$_execable" = "" ]]; then
+      #  su ${id} -c "test -r '${_dir}/$sub_dir'" >/dev/null 2>&1 && _readable="read"
+      #  su ${id} -c "test -w '${_dir}/$sub_dir'" >/dev/null 2>&1 && _writable="write"
+      #  su ${id} -c "test -x '${_dir}/$sub_dir'" >/dev/null 2>&1 && _execable="exec"
+      #  if ! [[ "${_readable}" = "" && "${_writable}" = "" && "${_execable}" = "" ]]; then
 
       #    x=0
-      #    _dir2="$_dir/$sub_dir"
+      #    _dir2="${_dir}/$sub_dir"
       #    wc_=${#_dir2}
       #    while [ "${wc_}" -gt "${x}" ] ; do
       #      if [[ "$OS" = "Linux" ]]; then
@@ -164,9 +175,9 @@ list_dirs_permissions_by_user() {
       #        sub_chr=$(echo ${_dir2} | cut -c${x}-${step_n})
       #      fi
       #      if [ "${x}" -eq 0 ] ; then
-      #        printf "%-10s %-7s %-5s %-10s %-29s %-s \n" $id "$_readable" "$_writable" "$_execable" "${sub_chr}" "${check_box}" >>$ACCESS_REPORT
+      #        printf "%-10s %-7s %-5s %-10s %-29s %-s \n" ${id} "${_readable}" "${_writable}" "${_execable}" "${sub_chr}" "${check_box}" >>${ACCESS_REPORT}
       #      else
-      #        printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
+      #        printf "%-35s %-s \n" " " "${sub_chr}" >>${ACCESS_REPORT}
       #      fi
       #      x=${x}+${step_n}
       #    done
@@ -175,11 +186,15 @@ list_dirs_permissions_by_user() {
       #done
     done
   done
+  \cp -f ${ACCESS_REPORT} ${dc01_REPORT}
+  chown dc01:system ${dc01_REPORT}
+  chmod 770 ${dc01_REPORT}
 }
 
+
 list_last_ACCESS_REPORT() {
-  if [ -f "$ACCESS_REPORT" ]; then
-    cat $ACCESS_REPORT
+  if [ -f "${ACCESS_REPORT}" ]; then
+    cat ${ACCESS_REPORT}
     return
   else
     echo "沒有今天的報告。"
@@ -194,7 +209,7 @@ list_last_ACCESS_REPORT() {
   fi
 
   last_report=$(ls -tr ACCESS_* | tail -1)
-  cat $last_report
+  cat ${last_report}
 
 }
 
@@ -205,7 +220,7 @@ main() {
     show_main_menu
     read choice
     clear
-    case $choice in
+    case ${choice} in
     1) list_dirs_permissions_by_user ;;
     2) list_last_ACCESS_REPORT ;;
     [Qq])

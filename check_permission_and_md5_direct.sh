@@ -1,5 +1,5 @@
 #!/bin/sh
-# date : 2019-04-09
+# date : 2019-04-30
 # line  #23  #56  #71
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
@@ -89,7 +89,7 @@ list_dirs_permissions_by_user() {
 
   DIRECTORY_YOU_WANT_TO_CHECK="${check_t}"
 
-  check_box="                          口續用口不續用，將開單刪除"
+  check_box="             口續用口不續用，將開單刪除"
   step_n=29
 
   for id in $ids; do
@@ -107,6 +107,14 @@ list_dirs_permissions_by_user() {
 
         echo "======================================================================================================================" >>$ACCESS_REPORT
 
+        if [ ${id} == "cbrusr" ] || [ ${id:0:2} == "sp" ] ||   [ ${id:0:2} == "op" ] ; then
+          Branch="  系統管理科"
+        elif [ ${id:0:2} == "dc" ] ; then
+          Branch="  資料管制科"
+        else
+          Branch=""
+        fi
+
         x=0
         wc_=${#_dir}
         while [ "${wc_}" -gt "${x}" ] ; do
@@ -116,13 +124,13 @@ list_dirs_permissions_by_user() {
             sub_chr=$(echo ${_dir} | cut -c${x}-${step_n})
           fi
           if [ "${x}" -eq 0 ] ; then
-            printf "%-10s %-7s %-5s %-10s %-29s %-s \n" $id "$_readable" "$_writable" "$_execable" "${sub_chr}" "${check_box}" >>$ACCESS_REPORT
+            printf "%-10s %-7s %-5s %-10s %-29s %-12s %-s \n" "$id" "$_readable" "$_writable" "$_execable" "${sub_chr}" "${Branch}" "${check_box}" >>$ACCESS_REPORT
           else
             printf "%-35s %-s \n" " " "${sub_chr}" >>$ACCESS_REPORT
           fi
-          echo '' >>$ACCESS_REPORT
           x=${x}+${step_n}
         done
+        echo '' >>$ACCESS_REPORT
 
       else
 
