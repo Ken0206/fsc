@@ -1,4 +1,4 @@
-### 檔案清單︰
+﻿### 檔案清單︰
 ```
 01. README.md                          本檔案
 02. hidden_files.sh                    隱藏檔檢查
@@ -88,6 +88,6 @@
    執行報告︰  /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
    並複製一份到 /home/dc01/
 
-   如果有加參數 direct ，直接執行並輸出報告於︰
+   如果有加參數 direct 則無互動選單，直接執行並輸出報告於︰
        /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
 ```
