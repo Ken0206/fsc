@@ -1,21 +1,26 @@
 #!/bin/sh
-# date : 2019-04-30
-# line  #24  #57  #72  #35:${ACCESS_REPORT}  #187~189
+# date : 2019-05-02
+# line  #29  #71  #40:${ACCESS_REPORT}
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
 # 使用前請先定義 以下參數
+# skip_check    # 如果設定不是 "n" 則跳過檢查
 # DIRECTORY_YOU_WANT_TO_CHECK_PERMISSION  #掃描這些目錄下所有檔案與目錄的權限
 
-DIRECTORY_YOU_WANT_TO_CHECK="/home /source /tmp"
+skip_check="n"
+DIRECTORY_YOU_WANT_TO_CHECK="/home /source /tmp /tmp/1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
 
+direct_option="direct"
+option_1="$1"
 _HOME="/src/chkau/report"
 [ -d "${_HOME}" ] || mkdir -p ${_HOME}
 dc01_home="/home/dc01"
 [ -d "${dc01_home}" ] || mkdir -p ${dc01_home}
 dc01_REPORT="${dc01_home}/ACCESS_report_$(hostname)_$(date +%Y%m%d).txt"
 ACCESS_REPORT="${_HOME}/ACCESS_report_$(hostname)_$(date +%Y%m%d).txt"
-cat /dev/null > ${ACCESS_REPORT}
-typeset -i x=0
+typeset -i x
+typeset -i x_n
+typeset -i step_n_n
 
 if [[ "$(uname)" = "Linux" ]]; then
   OS="Linux"
@@ -47,6 +52,17 @@ list_dirs_permissions_by_user() {
   # 
   # spos2    read       exec /home
 
+  cat /dev/null > ${ACCESS_REPORT}
+  check_t=""
+
+  if [ "${skip_check}" != "n" ] ; then
+    skip_check_y
+    if [ "${option_1}" != "${direct_option}" ] ; then
+      cp_report
+    fi
+    return
+  fi
+
   if [[ "$OS" = "Linux" ]]; then
     ids=$(grep "^AllowUsers" /etc/ssh/sshd_config | tr ' ' '\n' | grep -v '@' | grep -v AllowUsers )
   else
@@ -71,7 +87,10 @@ list_dirs_permissions_by_user() {
     ids=$(cat /etc/passwd | awk -F':' '/.*sh$/  {print $1}')
   fi
 
-  echo "Please wait..."
+  if [ "${option_1}" != "${direct_option}" ] ; then
+    echo "Please wait..."
+  fi
+
   echo "                                 使用者對重要系統伺服器重要業務檔案與程式權限清查" >>${ACCESS_REPORT}
   echo '' >>${ACCESS_REPORT}
   echo HOSTNAME: $(hostname) "    " TIME: $(date +%Y/%m/%d) $(date +%H:%M:%S) >>${ACCESS_REPORT}
@@ -97,7 +116,7 @@ list_dirs_permissions_by_user() {
 
   for id in ${ids} ; do
     echo '' >>${ACCESS_REPORT}
-    printf "%-0s %-11s %-9s %-7s %-12s %-39s %-15s %-16s %-s \n" "" "帳號" "讀取" "寫入" "執行" "檔案或程式路徑" "負責科別" "持有人簽章" "續用/不續用，將開單刪除"  >> ${ACCESS_REPORT}
+    echo "  帳號     讀取    寫入  執行        檔案或程式路徑                  負責科別    持有人簽章   續用/不續用，將開單刪除" >>$ACCESS_REPORT
     for _dir in ${DIRECTORY_YOU_WANT_TO_CHECK} ; do
       _readable=""
       _writable=""
@@ -108,26 +127,24 @@ list_dirs_permissions_by_user() {
 
       if ! [[ "${_readable}" = "" && "${_writable}" = "" && "${_execable}" = "" ]]; then
 
-        printf '%.s=' {1..118} >> ${ACCESS_REPORT} ; echo '' >> ${ACCESS_REPORT}
+	  echo '======================================================================================================================' >> ${ACCESS_REPORT}
 
-        if [ ${id} == "cbrusr" ] || [ ${id:0:2} == "sp" ] ||   [ ${id:0:2} == "op" ] ; then
+        if [ ${id} == "cbrusr" ] || [ $(echo ${id} | cut -c1-2) == "sp" ] ||   [ $(echo ${id} | cut -c1-2) == "op" ] ; then
           Branch="  系統管理科"
-        elif [ ${id:0:2} == "dc" ] ; then
+        elif [ $(echo ${id} | cut -c1-2) == "dc" ] ; then
           Branch="  資料管制科"
         else
-          Branch=""
+         Branch=""
         fi
 
         x=0
         wc_=${#_dir}
         while [ "${wc_}" -gt "${x}" ] ; do
-          if [[ "$OS" = "Linux" ]]; then
-            sub_chr=${_dir:${x}:${step_n}}
-          else
-            sub_chr=$(echo ${_dir} | cut -c${x}-${step_n})
-          fi
+          x_n=${x}+1
+          step_n_n=${step_n}+1
+          sub_chr=$(echo ${_dir} | cut -c${x_n}-${step_n_n})
           if [ "${x}" -eq 0 ] ; then
-            printf "%-10s %-7s %-5s %-10s %-29s %-30s %-s \n" "${id}" "${_readable}" "${_writable}" "${_execable}" "${sub_chr}" "${Branch}" "${check_box}" >>${ACCESS_REPORT}
+            printf "%-10s %-7s %-5s %-10s %-29s %-12s %-12s %-s \n" "${id}" "${_readable}" "${_writable}" "${_execable}" "${sub_chr}" "${Branch}" "" "${check_box}" >>${ACCESS_REPORT}
           else
             printf "%-35s %-s \n" " " "${sub_chr}" >>${ACCESS_REPORT}
           fi
@@ -186,9 +203,10 @@ list_dirs_permissions_by_user() {
       #done
     done
   done
-  \cp -f ${ACCESS_REPORT} ${dc01_REPORT}
-  chown dc01:system ${dc01_REPORT}
-  chmod 770 ${dc01_REPORT}
+  if [ "${option_1}" != "${direct_option}" ] ; then
+    cp_report
+  fi
+
 }
 
 
@@ -212,6 +230,24 @@ list_last_ACCESS_REPORT() {
   cat ${last_report}
 
 }
+
+
+skip_check_y() {
+  echo "                                 使用者對重要系統伺服器重要業務檔案與程式權限清查" >>${ACCESS_REPORT}
+  echo '' >>${ACCESS_REPORT}
+  echo HOSTNAME: $(hostname) "    " TIME: $(date +%Y/%m/%d) $(date +%H:%M:%S) >>${ACCESS_REPORT}
+  echo '' >>${ACCESS_REPORT}
+  echo "本系統沒有系統伺服器重要業務檔案" >>${ACCESS_REPORT}
+  echo '' >>${ACCESS_REPORT}
+}
+
+
+cp_report() {
+  \cp -f ${ACCESS_REPORT} ${dc01_REPORT}
+  chown dc01 ${dc01_REPORT}
+  chmod 770 ${dc01_REPORT}
+}
+
 
 main() {
   # The entry for sub functions.
@@ -242,6 +278,9 @@ main() {
   done
 }
 
-main
-#list_dirs_permissions_by_user
+if [ "${option_1}" != "${direct_option}" ] ; then
+  main
+else
+  list_dirs_permissions_by_user
+fi
 
