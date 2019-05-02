@@ -8,14 +8,13 @@
 06. user_files.sh                      搜尋特定帳號所屬檔案清單 (有互動選單)
 07. export_env                         共同設定
 08. check_permission_and_md5.sh        帳號對程式及資料檔案相關權限之檢查 (有互動選單)
-09. check_permission_and_md5_direct.sh 同上，沒有互動選單，直接輸出報告
 
 5 個 check 檔
-10. iso_chk_aix__v3.0.sh
-11. iso_chk_linux_rhel6_3.0.sh
-12. iso_chk_linux_rhel7_3.0.sh
-13. iso_chk_linux_suse11_3.0.sh
-14. iso_chk_linux_suse12_3.0.sh
+09. iso_chk_aix__v3.0.sh
+10. iso_chk_linux_rhel6_3.0.sh
+11. iso_chk_linux_rhel7_3.0.sh
+12. iso_chk_linux_suse11_3.0.sh
+13. iso_chk_linux_suse12_3.0.sh
 ```
 ---
 ### script 共同特性︰
@@ -87,4 +86,8 @@
 ### 6. check_permission_and_md5.sh 帳號對程式及資料檔案相關權限之檢查 (有互動選單)
 ```
    執行報告︰  /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
+   並複製一份到 /home/dc01/
+
+   如果有加參數 direct ，直接執行並輸出報告於︰
+       /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
 ```
