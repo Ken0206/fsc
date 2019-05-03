@@ -1,5 +1,5 @@
 #!/bin/sh
-# date : 2019-05-02
+# date : 2019-05-03
 # line  #29  #71  #40:${ACCESS_REPORT}
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
@@ -8,7 +8,7 @@
 # DIRECTORY_YOU_WANT_TO_CHECK_PERMISSION  #掃描這些目錄下所有檔案與目錄的權限
 
 skip_check="n"
-DIRECTORY_YOU_WANT_TO_CHECK="/home /source /tmp /tmp/1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
+DIRECTORY_YOU_WANT_TO_CHECK="/home /source /tmp"
 
 direct_option="direct"
 option_1="$1"
@@ -134,15 +134,19 @@ list_dirs_permissions_by_user() {
         elif [ $(echo ${id} | cut -c1-2) == "dc" ] ; then
           Branch="  資料管制科"
         else
-         Branch=""
+          Branch=""
         fi
 
         x=0
         wc_=${#_dir}
         while [ "${wc_}" -gt "${x}" ] ; do
-          x_n=${x}+1
-          step_n_n=${step_n}+1
-          sub_chr=$(echo ${_dir} | cut -c${x_n}-${step_n_n})
+          if [[ "$OS" = "Linux" ]]; then
+            sub_chr=${_dir:${x}:${step_n}}
+          else
+            x_n=${x}+1
+            step_n_n=${step_n}+1
+            sub_chr=$(echo ${_dir} | cut -c${x_n}-${step_n_n})
+          fi
           if [ "${x}" -eq 0 ] ; then
             printf "%-10s %-7s %-5s %-10s %-29s %-12s %-12s %-s \n" "${id}" "${_readable}" "${_writable}" "${_execable}" "${sub_chr}" "${Branch}" "" "${check_box}" >>${ACCESS_REPORT}
           else
@@ -152,9 +156,9 @@ list_dirs_permissions_by_user() {
         done
         echo '' >>${ACCESS_REPORT}
 
-      else
+      #else
 
-        x=0
+        #x=0
         #wc_=${#_dir}
         #while [ "${wc_}" -gt "${x}" ] ; do
         #  if [[ "$OS" = "Linux" ]]; then
@@ -237,7 +241,7 @@ skip_check_y() {
   echo '' >>${ACCESS_REPORT}
   echo HOSTNAME: $(hostname) "    " TIME: $(date +%Y/%m/%d) $(date +%H:%M:%S) >>${ACCESS_REPORT}
   echo '' >>${ACCESS_REPORT}
-  echo "本系統沒有系統伺服器重要業務檔案" >>${ACCESS_REPORT}
+  echo "本伺服器無重要業務檔案路徑" >>${ACCESS_REPORT}
   echo '' >>${ACCESS_REPORT}
 }
 
