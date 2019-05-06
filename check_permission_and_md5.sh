@@ -1,6 +1,6 @@
 #!/bin/sh
-# date : 2019-05-03
-# line  #29  #71  #40:${ACCESS_REPORT}
+# date : 2019-05-06
+# line  #31  #75  #42:${ACCESS_REPORT}
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
 # 使用前請先定義 以下參數
@@ -8,7 +8,7 @@
 # DIRECTORY_YOU_WANT_TO_CHECK_PERMISSION  #掃描這些目錄下所有檔案與目錄的權限
 
 skip_check="n"
-DIRECTORY_YOU_WANT_TO_CHECK="/home /source /tmp"
+DIRECTORY_YOU_WANT_TO_CHECK="/home /tmp"
 
 direct_option="direct"
 option_1="$1"
@@ -19,8 +19,9 @@ dc01_home="/home/dc01"
 dc01_REPORT="${dc01_home}/ACCESS_report_$(hostname)_$(date +%Y%m%d).txt"
 ACCESS_REPORT="${_HOME}/ACCESS_report_$(hostname)_$(date +%Y%m%d).txt"
 typeset -i x
-typeset -i x_n
-typeset -i step_n_n
+typeset -i c1
+typeset -i c2
+typeset -i wc_
 
 if [[ "$(uname)" = "Linux" ]]; then
   OS="Linux"
@@ -112,11 +113,10 @@ list_dirs_permissions_by_user() {
   DIRECTORY_YOU_WANT_TO_CHECK="${check_t}"
 
   check_box="口續用口不續用，將開單刪除"
-  step_n=29
+  step_n=28
 
   for id in ${ids} ; do
-    echo '' >>${ACCESS_REPORT}
-    echo "  帳號     讀取    寫入  執行        檔案或程式路徑                  負責科別    持有人簽章   續用/不續用，將開單刪除" >>$ACCESS_REPORT
+    table_head="0"
     for _dir in ${DIRECTORY_YOU_WANT_TO_CHECK} ; do
       _readable=""
       _writable=""
@@ -127,26 +127,38 @@ list_dirs_permissions_by_user() {
 
       if ! [[ "${_readable}" = "" && "${_writable}" = "" && "${_execable}" = "" ]]; then
 
-	  echo '======================================================================================================================' >> ${ACCESS_REPORT}
+        if [ ${table_head} == "0" ] ; then
+          echo '' >>${ACCESS_REPORT}
+          echo "  帳號     讀取    寫入  執行        檔案或程式路徑                  負責科別    持有人簽章   續用/不續用，將開單刪除" >>$ACCESS_REPORT
+          table_head="1"
+        fi
+	    echo '======================================================================================================================' >> ${ACCESS_REPORT}
 
         if [ ${id} == "cbrusr" ] || [ $(echo ${id} | cut -c1-2) == "sp" ] ||   [ $(echo ${id} | cut -c1-2) == "op" ] ; then
           Branch="  系統管理科"
         elif [ $(echo ${id} | cut -c1-2) == "dc" ] ; then
           Branch="  資料管制科"
         else
-          Branch=""
+         Branch=""
         fi
 
+########        wc_=${#_dir}
+        wc_t=$(echo ${_dir} | wc -m | awk '{print $1}')
+        wc_=${wc_t}-1
         x=0
-        wc_=${#_dir}
+        c1=1
         while [ "${wc_}" -gt "${x}" ] ; do
-          if [[ "$OS" = "Linux" ]]; then
-            sub_chr=${_dir:${x}:${step_n}}
-          else
-            x_n=${x}+1
-            step_n_n=${step_n}+1
-            sub_chr=$(echo ${_dir} | cut -c${x_n}-${step_n_n})
+
+          c2=${c1}+${step_n}
+          if [ ${c2} -gt ${wc_}  ] ; then
+            c2=${wc_}
           fi
+          #echo ${dir_} | cut -c${c1}-${c2}
+          #echo "${c1}-${c2}"
+          sub_chr=$(echo ${_dir} | cut -c${c1}-${c2})
+          #echo ${sub_chr}
+          c1=${c2}+1
+
           if [ "${x}" -eq 0 ] ; then
             printf "%-10s %-7s %-5s %-10s %-29s %-12s %-12s %-s \n" "${id}" "${_readable}" "${_writable}" "${_execable}" "${sub_chr}" "${Branch}" "" "${check_box}" >>${ACCESS_REPORT}
           else
