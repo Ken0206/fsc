@@ -1,6 +1,6 @@
 #!/bin/sh
 # date : 2019-05-06
-# line  #31  #75  #42:${ACCESS_REPORT}
+# line  #32  #76  #43:${ACCESS_REPORT}
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
 # 使用前請先定義 以下參數
@@ -8,7 +8,7 @@
 # DIRECTORY_YOU_WANT_TO_CHECK_PERMISSION  #掃描這些目錄下所有檔案與目錄的權限
 
 skip_check="n"
-DIRECTORY_YOU_WANT_TO_CHECK="/home /tmp"
+DIRECTORY_YOU_WANT_TO_CHECK="/home/dc01/abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
 
 direct_option="direct"
 option_1="$1"
@@ -139,10 +139,9 @@ list_dirs_permissions_by_user() {
         elif [ $(echo ${id} | cut -c1-2) == "dc" ] ; then
           Branch="  資料管制科"
         else
-         Branch=""
+          Branch=""
         fi
 
-########        wc_=${#_dir}
         wc_t=$(echo ${_dir} | wc -m | awk '{print $1}')
         wc_=${wc_t}-1
         x=0
@@ -153,10 +152,7 @@ list_dirs_permissions_by_user() {
           if [ ${c2} -gt ${wc_}  ] ; then
             c2=${wc_}
           fi
-          #echo ${dir_} | cut -c${c1}-${c2}
-          #echo "${c1}-${c2}"
           sub_chr=$(echo ${_dir} | cut -c${c1}-${c2})
-          #echo ${sub_chr}
           c1=${c2}+1
 
           if [ "${x}" -eq 0 ] ; then
