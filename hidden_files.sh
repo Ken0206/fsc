@@ -1,6 +1,6 @@
 #!/bin/sh
 # Description: hidden files
-# date: 2019-04-09
+# date: 2019-05-14
 
 if [ ! -f "/src/chkau/export_env" ] ; then
   echo ''
@@ -44,39 +44,33 @@ find_files() {
   #find / -nouser -ls 2>/dev/null | sort > ${newFind}
   #find / -nouser 2>/dev/null | sort > ${newFind}
 
-  for ex_ in $(cat ${baseDir}/exclude_hidden_files) ; do
+  while read ex_ ; do
     grep -v ${ex_} ${newFind} > ${tmpFind}
     cat ${tmpFind} > ${newFind}
-  done
+  done < ${baseDir}/exclude_hidden_files
 
   newFindCount=$(cat ${newFind} | wc -l)
   
-  #echo "   日期      時間      權限     UID   GID     完整路徑" >> ${output_newFind}
-  #echo "-------------------------------------------------------------------" >> ${output_newFind}
-  for i in $(cat ${newFind}) ; do
-    if [ -f "${i}" ] || [ -d "${i}" ] ; then
-      check_ftime ${i}
-      ls_file=$(ls -ld ${i} | awk '{print $1" "$3" "$4" "$9}')
-      echo ${ftime}" "${ls_file}  >> ${base_newFind}
-    fi
-  done
+  while read i ; do
+    check_ftime "${i}"
+    ls_file=$(ls -ld "${i}" | awk '{print $1" "$3" "$4}')
+    echo "${ftime} ${ls_file} ${i}"  >> ${base_newFind}
+  done < ${newFind}
   cat ${base_newFind} >> ${output_newFind}
-  #echo "-------------------------------------------------------------------" >> ${output_newFind}
-  #echo "   日期      時間      權限     UID   GID     完整路徑" >> ${output_newFind}
-  #echo '' >> ${output_newFind}
-  #echo "  Total  : ${newFindCount}" >> ${output_newFind}
 
   report=${0%/*}/${RANDOM}.temp
   if [ ! -f "${base_line}" ] ; then
+echo "------------------------------------------------------"
     cat ${base_newFind} > ${base_line}
     echo '' >> ${report}
     echo "查無基準檔，建立基準檔" >> ${report}
   else
     base_line_d=${0%/*}/${RANDOM}.temp
-    awk '{print $6}' ${base_line} | sort > ${base_line_d}
+    awk -F' /' '{print "/"$2}' ${base_line} > ${base_line_d}
+
     t1=${0%/*}/${RANDOM}.temp
     t2=${0%/*}/${RANDOM}.temp
-    diff ${base_line_d} ${newFind} | grep "^<" | awk '{print $2}' >> ${t1}
+    diff ${base_line_d} ${newFind} | grep "^<" | sed 's/^< //' >> ${t1}
     delCount=$(cat ${t1} | wc -l)
     if [ -s "${t1}" ] 
     then 
@@ -85,7 +79,7 @@ find_files() {
       echo "減少清單 :" >> ${report}
       cat ${t1} >> ${report}
     fi
-    diff ${base_line_d} ${newFind} | grep "^>" | awk '{print $2}' >> ${t2}
+    diff ${base_line_d} ${newFind} | grep "^>" | sed 's/^> //' >> ${t2}
     addCount=$(cat ${t2} | wc -l)
     if [ -s "${t2}" ]
     then
@@ -94,11 +88,11 @@ find_files() {
       echo "新增清單 :" >> ${report}
       echo "   日期      時間      權限     UID   GID     完整路徑" >> ${report}
       echo "-------------------------------------------------------------------" >> ${report}
-      for i in $(cat ${t2}) ; do
-        check_ftime ${i}
-        ls_file=$(ls -ld ${i} | awk '{print $1" "$3" "$4" "$9}')
-        echo ${ftime}" "${ls_file}  >> ${report}
-      done
+      while read i ; do
+        check_ftime "${i}"
+        ls_file=$(ls -ld "${i}" | awk '{print $1" "$3" "$4}')
+        echo "${ftime} ${ls_file} ${i}"  >> ${report}
+      done < ${t2}
       echo "-------------------------------------------------------------------" >> ${report}
       echo "   日期      時間      權限     UID   GID     完整路徑" >> ${report}
     fi
@@ -136,9 +130,9 @@ find_files() {
 
 check_ftime() {
   if [ "${OS}" == "Linux" ] ; then
-    ftime=$(ls -ld $1 --time-style=full-iso | awk '{print $6" "$7}' | awk -F'.' '{print $1}')
+    ftime=$(ls -ld "$1" --time-style=full-iso | awk '{print $6" "$7}' | awk -F'.' '{print $1}')
   else
-    ftime=$(istat $1 | grep "modified" | awk '{print $8"-"$4"-"$5" "$6}')
+    ftime=$(istat "$1" | grep "modified" | awk '{print $8"-"$4"-"$5" "$6}')
   fi
 
 }
