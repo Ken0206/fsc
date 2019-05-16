@@ -1,4 +1,4 @@
-﻿### 檔案清單︰
+### 檔案清單︰
 ```
 01. README.md                          本檔案
 02. hidden_files.sh                    隱藏檔檢查
@@ -9,12 +9,13 @@
 07. export_env                         共同設定
 08. check_permission_and_md5.sh        帳號對程式及資料檔案相關權限之檢查 (有互動選單)
 
-5 個 check 檔
+6 個 check 檔 :
 09. iso_chk_aix__v3.0.sh
-10. iso_chk_linux_rhel6_3.0.sh
-11. iso_chk_linux_rhel7_3.0.sh
-12. iso_chk_linux_suse11_3.0.sh
-13. iso_chk_linux_suse12_3.0.sh
+10. iso_chk_linux_rhel6_4.0.sh
+11. iso_chk_linux_rhel7_4.0.sh
+12. iso_chk_linux_suse10_4.0.sh
+13. iso_chk_linux_suse11_4.0.sh
+14. iso_chk_linux_suse12_4.0.sh
 ```
 ---
 ### script 共同特性︰
@@ -29,8 +30,8 @@
 ```
 基準檔1：  /src/chkau/baseLine/$(hostname)_hidden.txt
 基準檔2：  /src/chkau/baseLine/$(hostname)_hidden.txt.d
-第一次執行，沒有基準檔，或刪除任一基準檔，
-將當時找到的所有隱藏檔自動產生為基準檔。
+第一次執行，沒有基準檔，或刪除基準檔，
+將當時找到的所有隱藏檔清單自動產生為基準檔。
 
 每次執行產生隱藏檔清單，存於︰
 /src/chkau/report/$(hostname)_hidden_YYYYmmdd_HHMMSS.txt
@@ -88,6 +89,6 @@
    執行報告︰  /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
    並複製一份到 /home/dc01/
 
-   如果有加參數 direct 則無互動選單，直接執行並輸出報告於︰
+   如果有加參數 direct ，直接執行並輸出報告於︰
        /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
 ```
