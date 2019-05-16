@@ -13,25 +13,25 @@ hname=`hostname`
 #outfil=/$wrkdir/$hname.iso_chk.txt.$(date +%F-%H%M)
 outfil="${wrkdir}/$hname.iso_chk.txt.$(date +%F)"
 echo "#########" > $outfil
-echo "#ªþ ¥ó #" >> $outfil
+echo "#é™„ ä»¶ #" >> $outfil
 echo "#########" >> $outfil
 echo " " >> $outfil
 echo " " >> $outfil
-echo  `hostname` "AIX¨t²Î±j¤ÆÀË®Öªíªþ¥ó" >> $outfil
+echo  `hostname` "AIXç³»çµ±å¼·åŒ–æª¢æ ¸è¡¨é™„ä»¶" >> $outfil
 echo " "  >> $outfil
 echo " " >> $outfil
-echo "1. ²¾°£µn¿ýµe­±¤W¤§­«­n¨t²Î¸ê°T" >> $outfil
-echo "1-1 µn¿ýµe­±ªºwelcome message¬O§_§t¦³¨t²Î¸ê°T" >> $outfil
+echo "1. ç§»é™¤ç™»éŒ„ç•«é¢ä¸Šä¹‹é‡è¦ç³»çµ±è³‡è¨Š" >> $outfil
+echo "1-1 ç™»éŒ„ç•«é¢çš„welcome messageæ˜¯å¦å«æœ‰ç³»çµ±è³‡è¨Š" >> $outfil
 echo "==================================" >> $outfil
 echo " cat /etc/security/login.cfg" >> $outfil
-echo " ½T»{µn¿ýµe­±°T®§ herald= Unauthorized use of this system is prohibited." >> $outfil
-echo " ½T»{ logindelay=5 " >> $outfil
+echo " ç¢ºèªç™»éŒ„ç•«é¢è¨Šæ¯ herald= Unauthorized use of this system is prohibited." >> $outfil
+echo " ç¢ºèª logindelay=5 " >> $outfil
 cat /etc/security/login.cfg|grep -v '*'|head -10 >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "2. ¨Ï¥ÎªÌªº¦w¥þºÞ²z" >> $outfil
-echo "2-1 ½T»{±K½X«~½èªº³]©w¬O§_¨Ì·Ó¤½¥q¬Fµ¦³]©w" >> $outfil
+echo "2. ä½¿ç”¨è€…çš„å®‰å…¨ç®¡ç†" >> $outfil
+echo "2-1 ç¢ºèªå¯†ç¢¼å“è³ªçš„è¨­å®šæ˜¯å¦ä¾ç…§å…¬å¸æ”¿ç­–è¨­å®š" >> $outfil
 echo "==================================" >> $outfil
 echo " cat /etc/security/user |grep -v '^*' "  >> $outfil
 cat /etc/security/user|grep -v "^*" >> $outfil
@@ -39,34 +39,34 @@ echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
 
-echo "2-2 ½T»{root±b¸¹¤§ºÞ²z¬O§_¾A·í" >> $outfil
+echo "2-2 ç¢ºèªrootå¸³è™Ÿä¹‹ç®¡ç†æ˜¯å¦é©ç•¶" >> $outfil
 echo "==================================" >> $outfil
-echo "2.2.1 ½T»{root±b¸¹¤w¸g¥Ñ¨t²ÎºÞ²z¬ì¦^¦¬«ù¦³" >> $outfil
-echo "root±b¸¹¤w¥Ñ¨t²ÎºÞ²z¬ì¦^¦¬«ù¦³" >> $outfil
+echo "2.2.1 ç¢ºèªrootå¸³è™Ÿå·²ç¶“ç”±ç³»çµ±ç®¡ç†ç§‘å›žæ”¶æŒæœ‰" >> $outfil
+echo "rootå¸³è™Ÿå·²ç”±ç³»çµ±ç®¡ç†ç§‘å›žæ”¶æŒæœ‰" >> $outfil
 echo "----------------------------------" >> $outfil
-echo "2.2.2 ½T»{/etc/passwd, root¤§ uid ©M gid " >> $outfil
+echo "2.2.2 ç¢ºèª/etc/passwd, rootä¹‹ uid å’Œ gid " >> $outfil
 echo "cat /etc/passwd|grep '0:0' "  >> $outfil
 cat /etc/passwd |grep '0:0'  >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
-echo "2.2.3 ¦C¥X/etc/passwd¤¤,uid¤Îgid¬°0ªº©Ò¦³¨Ï¥ÎªÌ,¨ÃÀË¬d¬O§_¾A·í" >> $outfil
+echo "2.2.3 åˆ—å‡º/etc/passwdä¸­,uidåŠgidç‚º0çš„æ‰€æœ‰ä½¿ç”¨è€…,ä¸¦æª¢æŸ¥æ˜¯å¦é©ç•¶" >> $outfil
 echo "cat /etc/passwd|grep '0:0' "  >> $outfil
 cat /etc/passwd |grep '0:0'  >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
-echo "2.2.4 ÀË¬droot ¤§ rlogin=false ¨¾¤î»·ºÝª½±µµn¤J " >> $outfil
+echo "2.2.4 æª¢æŸ¥root ä¹‹ rlogin=false é˜²æ­¢é ç«¯ç›´æŽ¥ç™»å…¥ " >> $outfil
 echo "cat /etc/security/user " >> $outfil
 cat /etc/security/user |egrep "root|rlogin" |grep -v "^*" |head -3 >> $outfil
 echo "lsuser -a rlogin root " >> $outfil
 lsuser -a rlogin root >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
-echo "2.2.5 ÀË¬droot ¬O§_¦³«ü©w¦w¥þ·j´M¸ô®|" >> $outfil
+echo "2.2.5 æª¢æŸ¥root æ˜¯å¦æœ‰æŒ‡å®šå®‰å…¨æœå°‹è·¯å¾‘" >> $outfil
 echo 'echo $PATH '  >> $outfil
 echo  $PATH >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "2-3 ½T»{¨ä¥L¨t²Î¹w³]±b¸¹¬O§_¥²­n¦s¦b" >> $outfil
+echo "2-3 ç¢ºèªå…¶ä»–ç³»çµ±é è¨­å¸³è™Ÿæ˜¯å¦å¿…è¦å­˜åœ¨" >> $outfil
 echo "==================================" >> $outfil
-echo "2.3.1 ÀË¬d±b¸¹¦Cªí¡A¬O§_¯d¦³¦p guest, uucp, nuucp ©M lpd ±b¸¹¨ÃÂê©w" >> $outfil
+echo "2.3.1 æª¢æŸ¥å¸³è™Ÿåˆ—è¡¨ï¼Œæ˜¯å¦ç•™æœ‰å¦‚ guest, uucp, nuucp å’Œ lpd å¸³è™Ÿä¸¦éŽ–å®š" >> $outfil
 echo "lsuser -a -f account_locked guest " >> $outfil
 lsuser -a -f account_locked guest 2>> $outfil 1>>$outfil
 echo "---------   ----------  ----------- " >> $outfil
@@ -79,70 +79,70 @@ echo "---------   ----------  ----------- " >> $outfil
 echo "lsuser -a -f account_locked lpd " >> $outfil
 lsuser -a -f account_locked lpd 2>> $outfil 1>>$outfil
 echo "---------   ----------  ----------- " >> $outfil
-echo "2.3.2 ¦C¥Ü½T»{¼t°Ó¨Ï¥Î¤§±b¸¹"  >> $outfil
-echo "µL¼t°Ó¨Ï¥Î¤§±b¸¹"  >> $outfil
+echo "2.3.2 åˆ—ç¤ºç¢ºèªå» å•†ä½¿ç”¨ä¹‹å¸³è™Ÿ"  >> $outfil
+echo "ç„¡å» å•†ä½¿ç”¨ä¹‹å¸³è™Ÿ"  >> $outfil
 #echo "cat /etc/passwd|awk 'FS=":" {print \$1,\$3}'|awk '\$2 > 200 {print \$1}'|grep -v nobody|grep -v ipsec" >> $outfil
 #cat /etc/passwd|awk 'FS=":" {print $1,$3}'|awk '$2 > 200 {print $1}'|grep -v nobody|grep -v ipsec >> $outfil
 echo "----------------------------------" >> $outfil
-echo "2.3.3 ¦C¥Ü©Ò¦³¨t²Î¹w³]±b¸¹ "  >> $outfil
+echo "2.3.3 åˆ—ç¤ºæ‰€æœ‰ç³»çµ±é è¨­å¸³è™Ÿ "  >> $outfil
 echo "cat /etc/passwd|awk 'FS=":" {print \$1,\$3}'|awk '\$2 <= 300 {print \$1}'" >> $outfil
 cat /etc/passwd|awk 'FS=":" {print $1,$3}'|awk '$2 <= 300 {print $1}' >> $outfil
 echo "----------------------------------" >> $outfil
-echo "2.3.4 ÀË¬d/etc/passwd "  >> $outfil
+echo "2.3.4 æª¢æŸ¥/etc/passwd "  >> $outfil
 echo "cat /etc/passwd "  >> $outfil
 cat /etc/passwd |grep -v '^#'  >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
 echo "  " >> $outfil
 
-echo "2-4 ½T»{±j­¢¨Ï¥ÎªÌ¥¼§@¥ô¦ó°Ê§@¶W¹L¤@©w®É¶¡®É¡A¤©¥H±j­¢µn¥X¡C" >> $outfil
+echo "2-4 ç¢ºèªå¼·è¿«ä½¿ç”¨è€…æœªä½œä»»ä½•å‹•ä½œè¶…éŽä¸€å®šæ™‚é–“æ™‚ï¼Œäºˆä»¥å¼·è¿«ç™»å‡ºã€‚" >> $outfil
 echo "==================================" >> $outfil
-echo "ÀË¬d/etc/profile¬O§_³]¦³ TMOUT °Ñ¼Æ 900=15 minutes " >> $outfil
+echo "æª¢æŸ¥/etc/profileæ˜¯å¦è¨­æœ‰ TMOUT åƒæ•¸ 900=15 minutes " >> $outfil
 echo "cat /etc/profile|grep TMOUT"  >> $outfil
 cat /etc/profile |grep TMOUT >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
 
-echo "2-5 ½T»{¨Ï¥ÎªÌ¤£¥iÅÜ§ó/etc/profile³]©wÀÉ" >> $outfil
-#echo "2-5 ½T»{¥u¦³¨t²ÎºÞ²zªÌ¥iÅÜ§ó/etc/profile³]©wÀÉ" >> $outfil
+echo "2-5 ç¢ºèªä½¿ç”¨è€…ä¸å¯è®Šæ›´/etc/profileè¨­å®šæª”" >> $outfil
+#echo "2-5 ç¢ºèªåªæœ‰ç³»çµ±ç®¡ç†è€…å¯è®Šæ›´/etc/profileè¨­å®šæª”" >> $outfil
 echo "==================================" >> $outfil
-echo " ½T»{ /etc/profile ¨Ï¥ÎªÌµLÅÜ§óÅv­­"  >> $outfil
+echo " ç¢ºèª /etc/profile ä½¿ç”¨è€…ç„¡è®Šæ›´æ¬Šé™"  >> $outfil
 echo "ls -l /etc/profile "  >> $outfil
 ls -l /etc/profile  >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "2-6 ½T»{¨t²Î¹w³]¨Ï¥ÎªÌ±b¸¹ªºumask­È¬°027" >> $outfil
+echo "2-6 ç¢ºèªç³»çµ±é è¨­ä½¿ç”¨è€…å¸³è™Ÿçš„umaskå€¼ç‚º027" >> $outfil
 echo "==================================" >> $outfil
-echo "½T»{¨t²Î¹w³]¨Ï¥ÎªÌ±b¸¹ umask ­È¡A¤@¯ë¨Ï¥ÎªÌ±b¸¹¥i¬°022 " >> $outfil
+echo "ç¢ºèªç³»çµ±é è¨­ä½¿ç”¨è€…å¸³è™Ÿ umask å€¼ï¼Œä¸€èˆ¬ä½¿ç”¨è€…å¸³è™Ÿå¯ç‚º022 " >> $outfil
 echo "cat /etc/passwd|awk 'FS=":" {print \$1,\$3}'|awk '\$2 <= 300 {system("lsuser -a -f umask " $1)}'" >> $outfil
 cat /etc/passwd|awk 'FS=":" {print $1,$3}'|awk '$2 <= 300 {system("lsuser -a -f umask " $1)}' >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "2-7 ½T»{¨Ï¥ÎªÌ¥N½X¤§±K½XÀÉ" >> $outfil
+echo "2-7 ç¢ºèªä½¿ç”¨è€…ä»£ç¢¼ä¹‹å¯†ç¢¼æª”" >> $outfil
 echo "==================================" >> $outfil
-echo "ÀË¬d¨Ï¥ÎªÌ¥N½X¤§±K½XÀÉ" >> $outfil
+echo "æª¢æŸ¥ä½¿ç”¨è€…ä»£ç¢¼ä¹‹å¯†ç¢¼æª”" >> $outfil
  /src/chkau/passwd_check.sh >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "2-8 ½T»{ÁôÂÃÀÉ¬O§_¾A·í¡H" >> $outfil
+echo "2-8 ç¢ºèªéš±è—æª”æ˜¯å¦é©ç•¶ï¼Ÿ" >> $outfil
 echo "==================================" >> $outfil
-echo "ÀË¬dÀ³¥Îµ{¦¡©Ò¦b¸ô®|¤U¤§ÁôÂÃÀÉ¬O§_¾A·í " >> $outfil
+echo "æª¢æŸ¥æ‡‰ç”¨ç¨‹å¼æ‰€åœ¨è·¯å¾‘ä¸‹ä¹‹éš±è—æª”æ˜¯å¦é©ç•¶ " >> $outfil
     /src/chkau/hidden_files.sh >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "2-9 ½T»{NoUser¤§ÀÉ®×¡H" >> $outfil
+echo "2-9 ç¢ºèªNoUserä¹‹æª”æ¡ˆï¼Ÿ" >> $outfil
 echo "==================================" >> $outfil
-echo "ÀË¬dÀ³¥Îµ{¦¡©Ò¦b¸ô®|¤UNoUser¤§ÀÉ®×¬O§_¾A·í " >> $outfil
+echo "æª¢æŸ¥æ‡‰ç”¨ç¨‹å¼æ‰€åœ¨è·¯å¾‘ä¸‹NoUserä¹‹æª”æ¡ˆæ˜¯å¦é©ç•¶ " >> $outfil
     /src/chkau/nouser_files.sh >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
 
-echo "3-1 ½T»{/etc/hosts.equiv¡B rhosts¡B.netrc¦s¦b¤§¥²­n©Ê" >> $outfil
+echo "3-1 ç¢ºèª/etc/hosts.equivã€ rhostsã€.netrcå­˜åœ¨ä¹‹å¿…è¦æ€§" >> $outfil
 echo "==================================" >> $outfil
 echo "find /home -name .rhosts -print"  >> $outfil
 find /home -name .rhosts -print |grep -v old  >> $outfil
@@ -155,36 +155,36 @@ pg /etc/hosts.equiv |grep -v  '^#' >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
 echo "  " >> $outfil
 
-echo "3-2 ½T»{­­¨îroot±b¸¹¥u¯à¥ÑConsoleµn¤J"  >> $outfil
+echo "3-2 ç¢ºèªé™åˆ¶rootå¸³è™Ÿåªèƒ½ç”±Consoleç™»å…¥"  >> $outfil
 echo "==================================" >> $outfil
 echo "lsuser -a -f login rlogin root "  >> $outfil
 lsuser -a -f login rlogin root  >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "4-1 ½T»{¨t²Î¤§½]®Ö¥\¯à¤w¸g±Ò°Ê"  >> $outfil
+echo "4-1 ç¢ºèªç³»çµ±ä¹‹ç¨½æ ¸åŠŸèƒ½å·²ç¶“å•Ÿå‹•"  >> $outfil
 echo "==================================" >> $outfil
-echo "4.1.1À³¶}±Ò½]®Ö¼Ò¦¡ binmode=on ©Î streammode=on ">> $outfil
+echo "4.1.1æ‡‰é–‹å•Ÿç¨½æ ¸æ¨¡å¼ binmode=on æˆ– streammode=on ">> $outfil
 echo "cat  /etc/security/audit/config|head -4  "  >> $outfil
 cat /etc/security/audit/config|head -4  >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
-echo "4.1.2 ½T«O¯S®íÅv­­±b¸¹©Ò¤Þµo¨Æ¥ó¬Ò¦³°O¿ý¡A¦p Users: root=general " >> $outfil
+echo "4.1.2 ç¢ºä¿ç‰¹æ®Šæ¬Šé™å¸³è™Ÿæ‰€å¼•ç™¼äº‹ä»¶çš†æœ‰è¨˜éŒ„ï¼Œå¦‚ Users: root=general " >> $outfil
 echo "cat  /etc/security/audit/config|grep root" >> $outfil
 cat  /etc/security/audit/config|grep root  >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
 
-echo "4-2 ½T»{¨t²Î­«­n¥Ø¿ý©Îª«¥ó½]®Ö¬ö¿ý¤w±Ò°Ê"  >> $outfil
+echo "4-2 ç¢ºèªç³»çµ±é‡è¦ç›®éŒ„æˆ–ç‰©ä»¶ç¨½æ ¸ç´€éŒ„å·²å•Ÿå‹•"  >> $outfil
 echo "==================================" >> $outfil
 echo "cat /etc/security/audit/objects "  >> $outfil
 cat /etc/security/audit/objects >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "4-3 ½T»{½]®Ö³]©wÀÉÅv­­"  >> $outfil
+echo "4-3 ç¢ºèªç¨½æ ¸è¨­å®šæª”æ¬Šé™"  >> $outfil
 echo "==================================" >> $outfil
-echo "À³½T«O/etc/security/audit ¥Ø¿ý¤U©Ò¦³½]®Ö³]©wÀÉ¶È¦³root ¥i¦s¨ú" >> $outfil
+echo "æ‡‰ç¢ºä¿/etc/security/audit ç›®éŒ„ä¸‹æ‰€æœ‰ç¨½æ ¸è¨­å®šæª”åƒ…æœ‰root å¯å­˜å–" >> $outfil
 echo "ls -lR /etc/security/audit " >> $outfil
 chmod 600 /aulog/bin1
 chmod 600 /aulog/bin2
@@ -193,7 +193,7 @@ echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
 
-echo "4-4 ½T»{¨t²Î½]®ÖlogÀÉÅv­­"  >> $outfil
+echo "4-4 ç¢ºèªç³»çµ±ç¨½æ ¸logæª”æ¬Šé™"  >> $outfil
 echo "==================================" >> $outfil
 echo "ls -ld /aulog  "  >> $outfil
 ls -ld /aulog   >> $outfil
@@ -203,111 +203,111 @@ ls -l /aulog   >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "4-5 ½T»{¨t²Î½]®Ö¤é»x¦Û°Ê¶}±Ò³]©w"  >> $outfil
+echo "4-5 ç¢ºèªç³»çµ±ç¨½æ ¸æ—¥èªŒè‡ªå‹•é–‹å•Ÿè¨­å®š"  >> $outfil
 echo "==================================" >> $outfil
 echo "cat /etc/inittab |grep audit " >> $outfil
 cat /etc/inittab |grep audit  >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "5-1 ½T»{¸ô®|¤§³]©wÀô¹ÒÅÜ¼Æ"  >> $outfil
+echo "5-1 ç¢ºèªè·¯å¾‘ä¹‹è¨­å®šç’°å¢ƒè®Šæ•¸"  >> $outfil
 echo "==================================" >> $outfil
 echo 'su - root "-c env| grep PATH "'  >> $outfil
 su - root "-c env| grep PATH"   >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "5-2 ½T»{cron©Mat Jobs³]©w¤§¾A·í©Ê" >> $outfil
+echo "5-2 ç¢ºèªcronå’Œat Jobsè¨­å®šä¹‹é©ç•¶æ€§" >> $outfil
 echo "==================================" >> $outfil
-echo "5.2.1½T»{cron.allow¤Îat.allow ¥u¦³root¦W¦C¨ä¤¤" >> $outfil
+echo "5.2.1ç¢ºèªcron.allowåŠat.allow åªæœ‰rootååˆ—å…¶ä¸­" >> $outfil
 echo "cat /var/adm/cron/cron.allow "  >> $outfil
 cat /var/adm/cron/cron.allow  >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
 echo "cat /var/adm/cron/at.allow "  >> $outfil
 cat /var/adm/cron/at.allow  >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
-echo "5.2.2ÀËµøvar/adm/cron¬O§_¦³cron.deny¤Îat.deny¤§ÀÉ®× " >> $outfil
+echo "5.2.2æª¢è¦–var/adm/cronæ˜¯å¦æœ‰cron.denyåŠat.denyä¹‹æª”æ¡ˆ " >> $outfil
 echo "ls -l /var/adm/cron|grep deny" >> $outfil
 ls -l /var/adm/cron|grep deny >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
 echo "  " >> $outfil
 
 
-echo "5-3 ½T»{Cron control file (/var/spool/cron/crontabs/*)¬O§_¸g¾A·í«OÅ@" >> $outfil
+echo "5-3 ç¢ºèªCron control file (/var/spool/cron/crontabs/*)æ˜¯å¦ç¶“é©ç•¶ä¿è­·" >> $outfil
 echo "==================================" >> $outfil
-echo "5.3.1 ÀË¬d¨äÀÉ®×Åv­­" >> $outfil
+echo "5.3.1 æª¢æŸ¥å…¶æª”æ¡ˆæ¬Šé™" >> $outfil
 echo "ls -l /var/spool/cron/crontabs/ " >> $outfil
 ls -l /var/spool/cron/crontabs/ >> $outfil
 echo "----------------------------------" >> $outfil
-echo "5.3.2 ¥Hcronadm cron -l ²M¬d©Ò¦³ªºcron job ¬O§_¾A·í" >> $outfil
+echo "5.3.2 ä»¥cronadm cron -l æ¸…æŸ¥æ‰€æœ‰çš„cron job æ˜¯å¦é©ç•¶" >> $outfil
 echo "cronadm cron -l|grep -v '^#' " >> $outfil
 cronadm cron -l|grep -v '^#'  >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "6-1 ²¾°£¤£¥²­nªº¨t²ÎªA°È"  >> $outfil
+echo "6-1 ç§»é™¤ä¸å¿…è¦çš„ç³»çµ±æœå‹™"  >> $outfil
 echo "==================================" >> $outfil
-echo "6.1.1 ½T»{¶}±Òªº³q°T°ð¤ÎTCP/IPªA°È¾A·í©Ê" >> $outfil
+echo "6.1.1 ç¢ºèªé–‹å•Ÿçš„é€šè¨ŠåŸ åŠTCP/IPæœå‹™é©ç•¶æ€§" >> $outfil
 echo "pg /etc/inetd.conf |grep -v '^#' "  >> $outfil
 cat /etc/inetd.conf |grep -v '^#'   >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "6-2 ÀËµø´£¨Ñ¤§¨t²ÎªA°È¬O§_¾A·í"  >> $outfil
+echo "6-2 æª¢è¦–æä¾›ä¹‹ç³»çµ±æœå‹™æ˜¯å¦é©ç•¶"  >> $outfil
 echo "==================================" >> $outfil
-echo "6.2.1ÀË¬d/etc/rc.tcpip">> $outfil
+echo "6.2.1æª¢æŸ¥/etc/rc.tcpip">> $outfil
 echo "/etc/rc.tcpip |grep -v '^#'| grep 'start /' " >> $outfil
 cat /etc/rc.tcpip |grep -v '^#'| grep 'start /' >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
-echo "6.2.2ÀË¬d/etc/inittab" >> $outfil 
+echo "6.2.2æª¢æŸ¥/etc/inittab" >> $outfil 
 echo 'cat /etc/inittab |grep -v "^:" '  >> $outfil
 cat /etc/inittab | grep -v "^:"   >> $outfil
 echo "---------   ----------  ----------- " >> $outfil
-echo "6.2.3ÀË¬d/rc.net" >> $outfil
+echo "6.2.3æª¢æŸ¥/rc.net" >> $outfil
 echo "cat /etc/rc.net|grep -v '^#'" >> $outfil
 cat /etc/rc.net|grep -v '^#' >> $outfil
 echo "----------------------------------" >> $outfil
-echo "6.2.4 ÀË¬d¥Ø«e¤w¶}±ÒªA°È" >> $outfil
+echo "6.2.4 æª¢æŸ¥ç›®å‰å·²é–‹å•Ÿæœå‹™" >> $outfil
 echo "lssrc -a|grep  active" >> $outfil
 lssrc -a |grep active >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "7-1 ½T»{¥Ø«e¬O§_¤w§ó·s¦Ü­×¸Éµ{¦¡¤§³Ì¾Aª©¥»" >> $outfil
+echo "7-1 ç¢ºèªç›®å‰æ˜¯å¦å·²æ›´æ–°è‡³ä¿®è£œç¨‹å¼ä¹‹æœ€é©ç‰ˆæœ¬" >> $outfil
 echo "==================================" >> $outfil
-echo "­×¸É¦Ü³Ì¾Aª©¥»"   >> $outfil
-echo "¥Ø«eª©¥»¦p¤U"   >> $outfil
+echo "ä¿®è£œè‡³æœ€é©ç‰ˆæœ¬"   >> $outfil
+echo "ç›®å‰ç‰ˆæœ¬å¦‚ä¸‹"   >> $outfil
 oslevel -s >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "8-1 ½T»{¬O§_°õ¦æ¨t²Î®zÂI±½´y¡C "  >> $outfil
+echo "8-1 ç¢ºèªæ˜¯å¦åŸ·è¡Œç³»çµ±å¼±é»žæŽƒæã€‚ "  >> $outfil
 echo "==================================" >> $outfil
-echo "¸ê¦w¬ì¤w°õ¦æ®zÂI±½´y"  >> $outfil
+echo "è³‡å®‰ç§‘å·²åŸ·è¡Œå¼±é»žæŽƒæ"  >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
 
-echo "9-1 ½T»{¥D¾÷¹êÅé¤§Æ_°Í¤w§´µ½«OºÞ¡B¨Ï¥Î"  >> $outfil
+echo "9-1 ç¢ºèªä¸»æ©Ÿå¯¦é«”ä¹‹é‘°åŒ™å·²å¦¥å–„ä¿ç®¡ã€ä½¿ç”¨"  >> $outfil
 echo "==================================" >> $outfil
-echo "¥D¾÷¹êÅé¸m©ó¾÷Âd¤¤,¾÷Âd¤§Æ_°Í©ñ¸m¾÷©Ð¨Ã³]Ã¯µn°OºÞ¨î"  >> $outfil
+echo "ä¸»æ©Ÿå¯¦é«”ç½®æ–¼æ©Ÿæ«ƒä¸­,æ©Ÿæ«ƒä¹‹é‘°åŒ™æ”¾ç½®æ©Ÿæˆ¿ä¸¦è¨­ç°¿ç™»è¨˜ç®¡åˆ¶"  >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 
-echo "9-2 ½T»{¬O§_¸Ë¸m¿N¿ý¾¹¤Î¥iÄâ¦¡¥~±µÀx¦s³]³Æ"  >> $outfil
+echo "9-2 ç¢ºèªæ˜¯å¦è£ç½®ç‡’éŒ„å™¨åŠå¯æ”œå¼å¤–æŽ¥å„²å­˜è¨­å‚™"  >> $outfil
 echo "==================================" >> $outfil
-#echo "¦w¸Ë³nÅé¡B¶}¥Ó½Ð³æ®Ö­ã«á¶i¾÷©Ð¨Ï¥Î"  >> $outfil
-echo "¥¼¦w¸Ë¿N¿ý¾¹"  >> $outfil
-echo "¥¼¦w¸Ë¥iÄâ¦¡¥~±µÀx¦s³]³Æ"  >> $outfil
+#echo "å®‰è£è»Ÿé«”ã€é–‹ç”³è«‹å–®æ ¸å‡†å¾Œé€²æ©Ÿæˆ¿ä½¿ç”¨"  >> $outfil
+echo "æœªå®‰è£ç‡’éŒ„å™¨"  >> $outfil
+echo "æœªå®‰è£å¯æ”œå¼å¤–æŽ¥å„²å­˜è¨­å‚™"  >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
-echo "µù¡GµLªk°õ¦æ»Ý­z©ú²z¥Ñ"  >> $outfil
+echo "è¨»ï¼šç„¡æ³•åŸ·è¡Œéœ€è¿°æ˜Žç†ç”±"  >> $outfil
 echo "==================================" >> $outfil
-echo "¸g¡@¡@¡@¿ì¡G"  >> $outfil
+echo "ç¶“ã€€ã€€ã€€è¾¦ï¼š"  >> $outfil
 echo "" >> $outfil
-echo "°Æ¡@¬ì¡@ªø¡G"  >> $outfil
+echo "å‰¯ã€€ç§‘ã€€é•·ï¼š"  >> $outfil
 echo "" >> $outfil
-echo "¬ì¡@¡@¡@ªø¡G"  >> $outfil
+echo "ç§‘ã€€ã€€ã€€é•·ï¼š"  >> $outfil
 echo "" >> $outfil
 
 

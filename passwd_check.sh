@@ -1,7 +1,7 @@
 #!/bin/sh
 # Description: passwd check
 # line no. #32, #118, #119
-# date: 2019-04-15
+# date: 2019-04-09
 
 if [ ! -f "/src/chkau/export_env" ] ; then
   echo ''
