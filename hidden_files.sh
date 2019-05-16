@@ -1,6 +1,6 @@
 #!/bin/sh
 # Description: hidden files
-# date: 2019-05-14
+# date: 2019-05-16
 
 if [ ! -f "/src/chkau/export_env" ] ; then
   echo ''
@@ -60,7 +60,6 @@ find_files() {
 
   report=${0%/*}/${RANDOM}.temp
   if [ ! -f "${base_line}" ] ; then
-echo "------------------------------------------------------"
     cat ${base_newFind} > ${base_line}
     echo '' >> ${report}
     echo "查無基準檔，建立基準檔" >> ${report}
@@ -72,8 +71,7 @@ echo "------------------------------------------------------"
     t2=${0%/*}/${RANDOM}.temp
     diff ${base_line_d} ${newFind} | grep "^<" | sed 's/^< //' >> ${t1}
     delCount=$(cat ${t1} | wc -l)
-    if [ -s "${t1}" ] 
-    then 
+    if [ -s "${t1}" ] ; then 
       echo '' >> ${report}
       echo "檔案減少數量 : ${delCount}" >> ${report}
       echo "減少清單 :" >> ${report}
@@ -81,8 +79,7 @@ echo "------------------------------------------------------"
     fi
     diff ${base_line_d} ${newFind} | grep "^>" | sed 's/^> //' >> ${t2}
     addCount=$(cat ${t2} | wc -l)
-    if [ -s "${t2}" ]
-    then
+    if [ -s "${t2}" ] ; then
       echo '' >> ${report}
       echo "檔案新增數量 : ${addCount}" >> ${report}
       echo "新增清單 :" >> ${report}
@@ -98,8 +95,7 @@ echo "------------------------------------------------------"
     fi
     rm -f ${t1} ${t2}
     noFlag=1
-    if [ ! -s "${report}" ]
-    then
+    if [ ! -s "${report}" ] ; then
       noFlag=0
       echo '' >> ${report}
       echo "與基準檔比對相同，沒有新增減少" >> ${report}
