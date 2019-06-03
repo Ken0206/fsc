@@ -1,6 +1,6 @@
 #!/bin/sh
 # Description: search user files
-# date: 2019-04-09
+# date: 2019-05-27
 
 if [ ! -f "/src/chkau/export_env" ] ; then
   echo ''
@@ -27,6 +27,8 @@ else
   OS="AIX"
 fi
 
+typeset -i line_no
+
 
 search_user_files() {
 echo ''
@@ -34,7 +36,7 @@ echo '請輸入帳號 :'
 echo ''
 read user_name
 [ -z "${user_name}" ] && return
-echo '-------------------------------------------------------------' >> ${log}
+echo '--------------------------------------------------------------------------------------' >> ${log}
 
 if [ "${user_name}" == "root" ] || [ ${user_name} == "0" ] ; then
   echo '' | tee -a ${log}
@@ -42,6 +44,8 @@ if [ "${user_name}" == "root" ] || [ ${user_name} == "0" ] ; then
   echo '' | tee -a ${log}
   echo $(date +%Y-%m-%d" "%H:%M:%S) | tee -a ${log}
   echo '' | tee -a ${log}
+  echo "請按Enter鍵繼續"
+  read anykey
   return
 fi
 
@@ -52,15 +56,17 @@ if [ "$?" -eq 1 ] ; then
   echo '' | tee -a ${log}
   echo $(date +%Y-%m-%d" "%H:%M:%S) | tee -a ${log}
   echo '' | tee -a ${log}
+  echo "請按Enter鍵繼續"
+  read anykey
   return
 fi
 
 echo ''
 echo '搜尋中 ...'
 echo ''
-tmp1=${0%/*}/${RANDOM}_temp
+#tmp1=${0%/*}/${RANDOM}_tmp1_temp
 u_uid=$(id -u ${user_name})
-user_files_log=${0%/*}/${RANDOM}_temp
+user_files_log=${0%/*}/${RANDOM}_user_files_log_temp
 files=${reportDir}/$(hostname)_files_list_${user_name}_$(date +%Y%m%d_%H%M%S).txt
 #userHome=$(grep ${user_name} /etc/passwd | awk -F':' '{print $6}')
 #find / -user ${user_name} 2> /dev/null | grep -vE "^/proc|^${userHome}/\." > ${tmp1}  
@@ -72,15 +78,13 @@ echo '' >> ${user_files_log}
 echo '所屬檔案清單 : '${files} >> ${user_files_log}
 echo '清單內容 :' >> ${user_files_log}
 if [ -s "${files}" ] ; then
-  #cat ${files} >> ${user_files_log}
-  for i in $(cat ${files}) ; do
-    check_ftime ${i}
-    ls_file=$(ls -ld ${i} | awk '{print $1" "$3" "$4" "$9}')
-    echo ${ftime}" "${ls_file} >> ${user_files_log}
-  done
+  while read file_name ; do
+    check_ftime "${file_name}"
+    ls_file=$(ls -ld "${file_name}" | awk '{print $1" "$3" "$4}')
+    echo "${ftime} ${ls_file} ${file_name}">> ${user_files_log}
+  done < ${files}
   echo '' >> ${user_files_log}
   cat ${user_files_log} | tee -a ${log}
-  
 else
   echo '' >> ${user_files_log}
   echo "沒有檔案"  >> ${user_files_log}
@@ -88,53 +92,44 @@ else
   echo $(date +%Y-%m-%d" "%H:%M:%S) >> ${user_files_log}
   echo '' >> ${user_files_log}
   cat ${user_files_log} | tee -a ${log}
+  echo "請按Enter鍵繼續"
+  read anykey
   return
 fi
-
 echo "警告！ 刪除檔案無法復原！"
 echo "請問要刪除上列其中之一的檔案嗎? yes/no (no),  只按 Enter 不刪除."
-read del_a
-case ${del_a} in
-  yes)
-    for i in $(cat ${files}) ; do
-      echo "是否刪除 ${i} ? yes/no (no)"
-      read del_b
-      case ${del_b} in
-        yes)
-          mdir='/tmp/'${user_name}${i%/*}
-          #echo ${mdir}
-          [ -d ${mdir} ] || mkdir -p ${mdir}
-          mv ${i} ${mdir}
-          #rm -f ${i}
-          echo "已刪除."
-          echo ''
-          echo "已刪除 "${i} >> ${log}
-          ;;
-        *)
-          echo '' > /dev/null
-          ;;
-      esac
-    done
-    echo '' >> ${log}
-    date_time=$(date +%Y%m%d_%H%M%S)
-    aPath='/source/backupUserFiles'
-    [ -d ${aPath} ] || mkdir -p ${aPath}
-    aFileName=${aPath}/${date_time}_${user_name}.tar.gz
-    cd /tmp
-    tar czf ${aFileName} ${user_name} 2>/dev/null
-    cd - > /dev/null
-    rm -rf /tmp/${user_name}
-
-    ;;
-  *)
-    echo '' > /dev/null
-    ;;
-esac
-
-#echo ''
+read del_ans
+lines=$(cat ${files} | wc -l)
+exit_while=${lines}+1
+tmp_dir_mid="tmp${RANDOM}"
+if [ "${del_ans}" == "yes" ] ; then
+  line_no=1
+  lines=$(cat ${files} | wc -l)
+  while [ ${line_no} -le ${lines} ] ; do
+    file_name=$(sed -n "${line_no}p" ${files})
+    line_no=${line_no}+1
+    echo "是否刪除 ${file_name} ? yes/no (no)"
+    read del_file_ans
+    if [ "${del_file_ans}" == "yes" ] ; then
+      mdir='/tmp/'${tmp_dir_mid}'/'${user_name}$(dirname "${file_name}")'/'
+      [ -d "${mdir}" ] || mkdir -p "${mdir}"
+      mv "${file_name}" "${mdir}"
+      echo "已刪除 ${file_name}" | tee -a ${log}
+      echo ''
+    fi
+  done
+  echo '' >> ${log}
+  date_time=$(date +%Y%m%d_%H%M%S)
+  aPath='/source/backupUserFiles'
+  [ -d ${aPath} ] || mkdir -p ${aPath}
+  aFileName=${aPath}/${date_time}_${user_name}.tar.gz
+  cd /tmp/${tmp_dir_mid}
+  tar czf ${aFileName} ${user_name} 2>/dev/null
+  cd - > /dev/null
+  rm -rf /tmp/${tmp_dir_mid}
+fi
 echo $(date +%Y-%m-%d" "%H:%M:%S) >> ${log}
 echo '' >> ${log}
-rm -f ${tmp1} ${user_files_log}
 
 }
 
@@ -155,9 +150,9 @@ view_log() {
 
 check_ftime() {
   if [ "${OS}" == "Linux" ] ; then
-    ftime=$(ls -ld $1 --time-style=full-iso | awk '{print $6" "$7}' | awk -F'.' '{print $1}')
+    ftime=$(ls -ld "$1" --time-style=full-iso | awk '{print $6" "$7}' | awk -F'.' '{print $1}')
   else
-    ftime=$(istat $1 | grep "modified" | awk '{print $8"-"$4"-"$5" "$6}')
+    ftime=$(istat "$1" | grep "modified" | awk '{print $8"-"$4"-"$5" "$6}')
   fi
 }
 
@@ -189,9 +184,10 @@ main() {
     1)
       clear
       search_user_files
-      echo ''
-      echo "請按Enter鍵繼續"
-      read anykey
+      rm -f *_temp
+      #echo ''
+      #echo "請按Enter鍵繼續"
+      #read anykey
       ;;
     2)
       clear
@@ -207,13 +203,14 @@ main() {
       # 刪除60天以上的舊報告
       find /src/chkau/report -mtime +60 -type f -exec rm -f {} \;
 
+      rm -f ${tmp1} ${user_files_log}
       echo ''
       echo 'Thanks !! bye bye ^-^ !!!'
       echo ''
       exit
       ;;
     *)
-      echo ''
+      echo '' > /dev/null
       ;;
     esac
   done
