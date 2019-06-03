@@ -1,22 +1,22 @@
-### 檔案清單︰
-```
-01. README.md                          本檔案
-02. hidden_files.sh                    隱藏檔檢查
-03. exclude_hidden_files               隱藏檔檢查-排除清單
-04. passwd_check.sh                    密碼檢查
-05. nouser_files.sh                    nouser 檔案檢查
-06. user_files.sh                      搜尋特定帳號所屬檔案清單 (有互動選單)
-07. export_env                         共同設定
-08. check_permission_and_md5.sh        帳號對程式及資料檔案相關權限之檢查 (有互動選單)
+||檔案清單||
+|--|--|--|
+|1|README.md|本檔案|
+|2|export_env|共同設定|
+|3|hidden_files.sh|隱藏檔檢查|
+|4|exclude_hidden_files|隱藏檔檢查-排除清單|
+|5|passwd_check.sh|密碼檢查|
+|6|nouser_files.sh|nouser 檔案檢查 (有互動選單)|
+|7|user_files.sh|搜尋特定帳號所屬檔案清單 (有互動選單)|
+|8|check_permission_and_md5.sh|帳號對程式及資料檔案相關權限之檢查 (有互動選單)|
 
-6 個 check 檔 :
-09. iso_chk_aix__v3.0.sh
-10. iso_chk_linux_rhel6_4.0.sh
-11. iso_chk_linux_rhel7_4.0.sh
-12. iso_chk_linux_suse10_4.0.sh
-13. iso_chk_linux_suse11_4.0.sh
-14. iso_chk_linux_suse12_4.0.sh
-```
+||6 個 check 檔|
+|--|--|
+|9| iso_chk_aix__v3.0.sh|
+|10|iso_chk_linux_rhel6_4.0.sh|
+|11|iso_chk_linux_rhel7_4.0.sh|
+|12|iso_chk_linux_suse10_4.0.sh|
+|13|iso_chk_linux_suse11_4.0.sh|
+|14|iso_chk_linux_suse12_4.0.sh|
 ---
 ### script 共同特性︰
 ```
@@ -58,10 +58,9 @@
 執行報告︰  /src/chkau/report/$(hostname)_passwd_check_Report.txt
 ```
 ---
-### 4. nouser_files.sh 是 nouser 檔案檢查
+### 4. nouser_files.sh 是 nouser 檔案檢查  (有互動選單)
 ```
-基準檔1：  /src/chkau/baseLine/$(hostname)_nouser.txt
-基準檔2：  /src/chkau/baseLine/$(hostname)_nouser.txt.d
+基準檔：  /src/chkau/baseLine/$(hostname)_nouser.txt
 第一次執行，沒有基準檔，或刪除任一基準檔，
 將當時找到的所有 nouser 檔自動產生為基準檔。
 
@@ -69,6 +68,10 @@
 /src/chkau/report/$(hostname)_nouser_YYYYmmdd_HHMMSS.txt
    
 執行報告︰  /src/chkau/report/$(hostname)_nouser_Report.txt
+```
+   如果有加參數 ***direct***
+```
+直接執行並輸出報告於︰ /src/chkau/report/$(hostname)_nouser_Report.txt
 ```
 ---
 ### 5. user_files.sh 搜尋特定帳號所屬檔案清單此 (有互動選單)
@@ -86,9 +89,10 @@
 ---
 ### 6. check_permission_and_md5.sh 帳號對程式及資料檔案相關權限之檢查 (有互動選單)
 ```
-   執行報告︰  /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
-   並複製一份到 /home/dc01/
-
-   如果有加參數 direct ，直接執行並輸出報告於︰
-       /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
+執行報告︰  /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
+並複製一份到 /home/dc01/
+```
+   如果有加參數 ***direct***
+```
+直接執行並輸出報告於︰ /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
 ```
