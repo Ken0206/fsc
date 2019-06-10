@@ -1,6 +1,6 @@
 #!/bin/sh
 # Description: search user files
-# date: 2019-05-27
+# date: 2019-06-10
 
 if [ ! -f "/src/chkau/export_env" ] ; then
   echo ''
@@ -19,7 +19,8 @@ else
   exit 1
 fi
 [ -d ${reportDir} ] || mkdir -p ${reportDir}
-log=${reportDir}/$(hostname)_files_list_Report.txt
+log_n=$(hostname)_files_list_Report.txt
+log=${reportDir}/${log_n}
 
 if [ "$(uname)" == "Linux" ] ; then
   OS="Linux"
@@ -67,7 +68,8 @@ echo ''
 #tmp1=${0%/*}/${RANDOM}_tmp1_temp
 u_uid=$(id -u ${user_name})
 user_files_log=${0%/*}/${RANDOM}_user_files_log_temp
-files=${reportDir}/$(hostname)_files_list_${user_name}_$(date +%Y%m%d_%H%M%S).txt
+files_n=$(hostname)_files_list_${user_name}_$(date +%Y%m%d_%H%M%S).txt
+files=${reportDir}/${files_n}
 #userHome=$(grep ${user_name} /etc/passwd | awk -F':' '{print $6}')
 #find / -user ${user_name} 2> /dev/null | grep -vE "^/proc|^${userHome}/\." > ${tmp1}  
 find / -user ${user_name} -type f 2> /dev/null | sort > ${files}  
@@ -85,6 +87,15 @@ if [ -s "${files}" ] ; then
   done < ${files}
   echo '' >> ${user_files_log}
   cat ${user_files_log} | tee -a ${log}
+  if [ -d "/home/dc01" ] ; then
+    \cp ${files} /home/dc01/
+    chown dc01 /home/dc01/${files_n}
+    chmod 660 /home/dc01/${files_n}
+  elif [ -d "/home/dp01" ] ; then
+    \cp ${files} /home/dp01/
+    chown dc01 /home/dp01/${files_n}
+    chmod 660 /home/dp01/${files_n}
+  fi
 else
   echo '' >> ${user_files_log}
   echo "沒有檔案"  >> ${user_files_log}
@@ -108,8 +119,13 @@ if [ "${del_ans}" == "yes" ] ; then
   while [ ${line_no} -le ${lines} ] ; do
     file_name=$(sed -n "${line_no}p" ${files})
     line_no=${line_no}+1
-    echo "是否刪除 ${file_name} ? yes/no (no)"
+    echo "是否刪除 ${file_name} ? yes/no/q (no)"
     read del_file_ans
+    if [ "${del_file_ans}" == "q" ] ; then
+      rm -f ${tmp1} ${user_files_log}
+      echo $(date +%Y-%m-%d" "%H:%M:%S) >> ${log}
+      return
+    fi
     if [ "${del_file_ans}" == "yes" ] ; then
       mdir='/tmp/'${tmp_dir_mid}'/'${user_name}$(dirname "${file_name}")'/'
       [ -d "${mdir}" ] || mkdir -p "${mdir}"
@@ -130,6 +146,15 @@ if [ "${del_ans}" == "yes" ] ; then
 fi
 echo $(date +%Y-%m-%d" "%H:%M:%S) >> ${log}
 echo '' >> ${log}
+if [ -d "/home/dc01" ] ; then
+  \cp ${log} /home/dc01/
+  chown dc01 /home/dc01/${log_n}
+  chmod 660 /home/dc01/${log_n}
+elif [ -d "/home/dp01" ] ; then
+  \cp ${log} /home/dp01/
+  chown dc01 /home/dp01/${log_n}
+  chmod 660 /home/dp01/${log_n}
+fi
 
 }
 
@@ -143,8 +168,8 @@ view_log() {
   cat ${log}
   check_ftime ${log}
   echo ''
-  echo '執行紀錄 : '${log}
-  echo '檔案時間 : '${ftime}
+  #echo '執行紀錄 : '${log}
+  #echo '檔案時間 : '${ftime}
 }
 
 
@@ -203,6 +228,7 @@ main() {
       # 刪除60天以上的舊報告
       find /src/chkau/report -mtime +60 -type f -exec rm -f {} \;
 
+      rm -f *_temp
       rm -f ${tmp1} ${user_files_log}
       echo ''
       echo 'Thanks !! bye bye ^-^ !!!'
