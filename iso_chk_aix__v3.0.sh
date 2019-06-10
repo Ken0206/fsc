@@ -137,7 +137,7 @@ echo "  " >> $outfil
 echo "2-9 確認NoUser之檔案？" >> $outfil
 echo "==================================" >> $outfil
 echo "檢查應用程式所在路徑下NoUser之檔案是否適當 " >> $outfil
-    /src/chkau/nouser_files.sh >> $outfil
+    /src/chkau/nouser_files.sh direct >> $outfil
 echo "----------------------------------" >> $outfil
 echo "  " >> $outfil
 

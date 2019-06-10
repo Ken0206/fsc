@@ -28,9 +28,9 @@
 ---
 ### 1. hidden_files.sh 隱藏檔檢查
 ```
-基準檔1：  /src/chkau/baseLine/$(hostname)_hidden.txt
-基準檔2：  /src/chkau/baseLine/$(hostname)_hidden.txt.d
-第一次執行，沒有基準檔，或刪除基準檔，
+基準檔：  /src/chkau/baseLine/$(hostname)_hidden.txt
+
+第一次執行，沒有基準檔，或刪除基準檔時，
 將當時找到的所有隱藏檔清單自動產生為基準檔。
 
 每次執行產生隱藏檔清單，存於︰
@@ -61,7 +61,7 @@
 ### 4. nouser_files.sh 是 nouser 檔案檢查  (有互動選單)
 ```
 基準檔：  /src/chkau/baseLine/$(hostname)_nouser.txt
-第一次執行，沒有基準檔，或刪除任一基準檔，
+第一次執行，沒有基準檔，或刪除任一基準檔時，
 將當時找到的所有 nouser 檔自動產生為基準檔。
 
 當次搜尋所有 nouser 檔案清單︰
