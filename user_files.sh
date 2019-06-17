@@ -1,6 +1,8 @@
 #!/bin/sh
 # Description: search user files
-# date: 2019-06-10
+# date: 2019-07-16
+
+rm -f ${0%/*}/*.temp
 
 if [ ! -f "/src/chkau/export_env" ] ; then
   echo ''
@@ -65,9 +67,9 @@ fi
 echo ''
 echo '搜尋中 ...'
 echo ''
-#tmp1=${0%/*}/${RANDOM}_tmp1_temp
+#tmp1=${0%/*}/${RANDOM}_tmp1.temp
 u_uid=$(id -u ${user_name})
-user_files_log=${0%/*}/${RANDOM}_user_files_log_temp
+user_files_log=${0%/*}/${RANDOM}_user_files_log.temp
 files_n=$(hostname)_files_list_${user_name}_$(date +%Y%m%d_%H%M%S).txt
 files=${reportDir}/${files_n}
 #userHome=$(grep ${user_name} /etc/passwd | awk -F':' '{print $6}')
@@ -209,7 +211,6 @@ main() {
     1)
       clear
       search_user_files
-      rm -f *_temp
       #echo ''
       #echo "請按Enter鍵繼續"
       #read anykey
@@ -228,7 +229,6 @@ main() {
       # 刪除60天以上的舊報告
       find /src/chkau/report -mtime +60 -type f -exec rm -f {} \;
 
-      rm -f *_temp
       rm -f ${tmp1} ${user_files_log}
       echo ''
       echo 'Thanks !! bye bye ^-^ !!!'
@@ -244,4 +244,6 @@ main() {
 
 
 main
+
+rm -f ${0%/*}/*.temp
 

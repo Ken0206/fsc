@@ -1,5 +1,5 @@
 #!/bin/sh
-# date : 2019-05-06
+# date : 2019-06-17
 # line  #32  #76  #43:${ACCESS_REPORT}
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
@@ -7,8 +7,10 @@
 # skip_check    # 如果設定不是 "n" 則跳過檢查
 # DIRECTORY_YOU_WANT_TO_CHECK_PERMISSION  #掃描這些目錄下所有檔案與目錄的權限
 
+rm -f ${0%/*}/*.temp
+
 skip_check="n"
-DIRECTORY_YOU_WANT_TO_CHECK="/home/dc01/abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+DIRECTORY_YOU_WANT_TO_CHECK="/home /tmp"
 
 direct_option="direct"
 option_1="$1"
@@ -295,4 +297,8 @@ if [ "${option_1}" != "${direct_option}" ] ; then
 else
   list_dirs_permissions_by_user
 fi
+
+rm -f ${0%/*}/*.temp
+
+exit 0
 

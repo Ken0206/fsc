@@ -69,7 +69,7 @@
    
 執行報告︰  /src/chkau/report/$(hostname)_nouser_Report.txt
 ```
-   如果有加參數 ***direct***
+   如果有加參數 ***direct*** 則無互動選單
 ```
 直接執行並輸出報告於︰ /src/chkau/report/$(hostname)_nouser_Report.txt
 ```
@@ -92,7 +92,7 @@
 執行報告︰  /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
 並複製一份到 /home/dc01/
 ```
-   如果有加參數 ***direct***
+   如果有加參數 ***direct*** 則無互動選單
 ```
 直接執行並輸出報告於︰ /src/chkau/report/ACCESS_report_$(hostname)_YYYYmmdd.txt
 ```

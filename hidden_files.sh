@@ -1,6 +1,8 @@
 #!/bin/sh
 # Description: hidden files
-# date: 2019-05-16
+# date: 2019-06-17
+
+rm -f ${0%/*}/*.temp
 
 if [ ! -f "/src/chkau/export_env" ] ; then
   echo ''
@@ -138,5 +140,8 @@ find_files
 
 # 刪除60天以上的舊報告
 find /src/chkau/report -mtime +60 -type f -exec rm -f {} \;
+
+rm -f ${0%/*}/*.temp
+
 exit 0
 

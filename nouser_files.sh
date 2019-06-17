@@ -1,6 +1,8 @@
 #!/bin/sh
 # Description: nouser files
-# date: 2019-06-03
+# date: 2019-06-17
+
+rm -f ${0%/*}/*.temp
 
 if [ ! -f "/src/chkau/export_env" ] ; then
   echo ''
@@ -43,7 +45,7 @@ find_files() {
   #echo '搜尋中 ...'
   #find / -name ".*" 2>/dev/null | sort > ${newFind}
   #find / -nouser -ls 2>/dev/null | sort > ${newFind}
-  find / -nouser -type f 2>/dev/null | sort > ${newFind}
+  find / -nouser -type f 2>/dev/null | grep -v "^/proc" |sort> ${newFind}
   newFindCount=$(cat ${newFind} | wc -l)
   
   #for i in $(cat ${newFind}) ; do
@@ -248,5 +250,8 @@ fi
 
 # 刪除60天以上的舊報告
 find /src/chkau/report -mtime +60 -type f -exec rm -f {} \;
+
+rm -f ${0%/*}/*.temp
+
 exit 0
 
