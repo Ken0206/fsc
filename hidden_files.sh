@@ -42,7 +42,7 @@ find_files() {
   output_newFind=${reportDir}/$(hostname)_hidden_${timeStamp}.txt
   base_newFind=${0%/*}/${RANDOM}.temp
   #echo '搜尋中 ...'
-  find / -name ".*" -type f 2>/dev/null | sort > ${newFind}
+  find / -name ".*" -type f 2>/dev/null | grep -v "^/.. " | sort > ${newFind}
   #find / -nouser -ls 2>/dev/null | sort > ${newFind}
   #find / -nouser 2>/dev/null | sort > ${newFind}
 
