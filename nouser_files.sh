@@ -1,6 +1,6 @@
 #!/bin/sh
 # Description: nouser files
-# date: 2019-06-17
+# date: 2019-06-24
 
 rm -f ${0%/*}/*.temp
 
@@ -124,7 +124,6 @@ find_files() {
 
   cat ${report} >> ${log}
   rm -f ${t1} ${t2} ${newFind} ${report} ${base_line_d} ${base_newFind}
-  clear > /dev/null 2>&1
   cat ${log}
 }
 
