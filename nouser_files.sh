@@ -124,7 +124,7 @@ find_files() {
 
   cat ${report} >> ${log}
   rm -f ${t1} ${t2} ${newFind} ${report} ${base_line_d} ${base_newFind}
-  clear
+  clear > /dev/null 2>&1
   cat ${log}
 }
 
