@@ -7,16 +7,18 @@
 |5|passwd_check.sh|密碼檢查|
 |6|nouser_files.sh|nouser 檔案檢查 (有互動選單)|
 |7|user_files.sh|搜尋特定帳號所屬檔案清單 (有互動選單)|
-|8|check_permission_and_md5.sh|帳號對程式及資料檔案相關權限之檢查 (有互動選單)|
+|8|user_files_solaris_10.sh|同上 solaris 專用，使用時可以改同上檔名|
+|9|user_files_tmp.sh|同 user_files.sh，未完成|
+|10|check_permission_and_md5.sh|帳號對程式及資料檔案相關權限之檢查 (有互動選單)|
 
 ||6 個 check 檔|
 |--|--|
-|9| iso_chk_aix__v3.0.sh|
-|10|iso_chk_linux_rhel6_4.0.sh|
-|11|iso_chk_linux_rhel7_4.0.sh|
-|12|iso_chk_linux_suse10_4.0.sh|
-|13|iso_chk_linux_suse11_4.0.sh|
-|14|iso_chk_linux_suse12_4.0.sh|
+|11| iso_chk_aix__v3.0.sh|
+|12|iso_chk_linux_rhel6_4.0.sh|
+|13|iso_chk_linux_rhel7_4.0.sh|
+|14|iso_chk_linux_suse10_4.0.sh|
+|15|iso_chk_linux_suse11_4.0.sh|
+|16|iso_chk_linux_suse12_4.0.sh|
 ---
 ### script 共同特性︰
 ```
