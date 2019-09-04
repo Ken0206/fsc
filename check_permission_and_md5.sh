@@ -1,6 +1,6 @@
 #!/bin/sh
-# date : 2019-06-17
-# line  #32  #76  #43:${ACCESS_REPORT}
+# date : 2019-09-04
+# line  #34  #78  #45:${ACCESS_REPORT}
 #
 # 建置帳號對程式及資料檔案相關權限之檢查功能介面，於帳號清查作業時一併列示清查
 # 使用前請先定義 以下參數
@@ -145,24 +145,28 @@ list_dirs_permissions_by_user() {
         fi
 
         wc_t=$(echo ${_dir} | wc -m | awk '{print $1}')
-        wc_=${wc_t}-1
+        wc_=$((${wc_t}-1))
         x=0
         c1=1
         while [ "${wc_}" -gt "${x}" ] ; do
 
-          c2=${c1}+${step_n}
+          c2=$((${c1}+${step_n}))
           if [ ${c2} -gt ${wc_}  ] ; then
             c2=${wc_}
           fi
+          if [ ${c1} -gt ${c2} ] ; then
+            break
+          fi
+
           sub_chr=$(echo ${_dir} | cut -c${c1}-${c2})
-          c1=${c2}+1
+          c1=$((${c2}+1))
 
           if [ "${x}" -eq 0 ] ; then
             printf "%-10s %-7s %-5s %-10s %-29s %-12s %-12s %-s \n" "${id}" "${_readable}" "${_writable}" "${_execable}" "${sub_chr}" "${Branch}" "" "${check_box}" >>${ACCESS_REPORT}
           else
             printf "%-35s %-s \n" " " "${sub_chr}" >>${ACCESS_REPORT}
           fi
-          x=${x}+${step_n}
+          x=$((${x}+${step_n}))
         done
         echo '' >>${ACCESS_REPORT}
 
